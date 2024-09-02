@@ -21,8 +21,8 @@ class Lieu
     #[ORM\Column(length: 255)]
     private ?string $rue = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $latitude = null;
+    #[ORM\Column]
+    private ?float $latitude = null;
 
     #[ORM\Column]
     private ?float $longitude = null;
@@ -70,12 +70,12 @@ class Lieu
         return $this;
     }
 
-    public function getLatitude(): ?string
+    public function getLatitude(): ?float
     {
         return $this->latitude;
     }
 
-    public function setLatitude(string $latitude): static
+    public function setLatitude(float $latitude): static
     {
         $this->latitude = $latitude;
 
