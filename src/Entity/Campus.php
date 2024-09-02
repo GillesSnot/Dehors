@@ -14,13 +14,7 @@ class Campus
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'campus')]
-    private Collection $students;
-
+    
     /**
      * @var Collection<int, Sortie>
      */
@@ -30,45 +24,22 @@ class Campus
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Ville $ville = null;
 
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'campus')]
+    private Collection $etudiants;
+
     public function __construct()
     {
         $this->students = new ArrayCollection();
         $this->sorties = new ArrayCollection();
+        $this->etudiants = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getStudents(): Collection
-    {
-        return $this->students;
-    }
-
-    public function addStudent(User $student): static
-    {
-        if (!$this->students->contains($student)) {
-            $this->students->add($student);
-            $student->setCampus($this);
-        }
-
-        return $this;
-    }
-
-    public function removeStudent(User $student): static
-    {
-        if ($this->students->removeElement($student)) {
-            // set the owning side to null (unless already changed)
-            if ($student->getCampus() === $this) {
-                $student->setCampus(null);
-            }
-        }
-
-        return $this;
     }
 
     /**
@@ -109,6 +80,36 @@ class Campus
     public function setVille(?Ville $ville): static
     {
         $this->ville = $ville;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getEtudiants(): Collection
+    {
+        return $this->etudiants;
+    }
+
+    public function addEtudiant(User $etudiant): static
+    {
+        if (!$this->etudiants->contains($etudiant)) {
+            $this->etudiants->add($etudiant);
+            $etudiant->setCampus($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEtudiant(User $etudiant): static
+    {
+        if ($this->etudiants->removeElement($etudiant)) {
+            // set the owning side to null (unless already changed)
+            if ($etudiant->getCampus() === $this) {
+                $etudiant->setCampus(null);
+            }
+        }
 
         return $this;
     }
