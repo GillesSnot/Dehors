@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\User;
 use App\Entity\Campus;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
@@ -14,6 +15,17 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        $user1 = new User();
+        $user1->setPassword('$2y$13$slruzjo7Bv.8QG4kkntzyOl08OgWmdH53jTx0RG1zxqJNuTu7ci.u'); // mdp : password
+        $user1->setEmail('test@test.fr');
+        $user1->setNom('De la tourrete');
+        $user1->setPrenom('Gilles');
+        $user1->setTelephone('33450453289');
+        $user1->setPseudo('Pseudo');
+        $manager->persist($user1);
+
+
+
         $chartresDeBretagne = new Ville();
         $chartresDeBretagne->setNom('Chartres-de-Bretagne');
         $chartresDeBretagne->setCp('35131');
@@ -89,6 +101,7 @@ class AppFixtures extends Fixture
         $sortieMediatheque->setDuree(90);
         $sortieMediatheque->setDescription('go lire des livres');
         $sortieMediatheque->setAnnulation(false);
+        $sortieMediatheque->setOrganisateur($user1);
         $manager->persist($sortieMediatheque);
 
         $sortiePiscine = new Sortie();

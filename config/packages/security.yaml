@@ -41,7 +41,7 @@ security:
         - { path: ^/logout$, roles: IS_AUTHENTICATED_FULLY }
 
         # Deny access to all other paths unless the user is authenticated
-        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+       
 
 when@test:
     security:
