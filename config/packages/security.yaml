@@ -19,9 +19,11 @@ security:
             form_login:
                 login_path: app_login
                 check_path: app_login
+                default_target_path: app_sortie
                 enable_csrf: true
             logout:
                 path: app_logout
+                target: app_login 
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week in seconds
@@ -43,6 +45,9 @@ security:
         
         # Allow access to the logout path to everyone
         - { path: ^/logout$, roles: IS_AUTHENTICATED_FULLY }
+        
+        # Allow access to the logout path to everyone
+        - { path: ^/register$, roles: ROLE_ADMIN}
 
         # Deny access to all other paths unless the user is authenticated
         - { path: ^/, roles: [IS_AUTHENTICATED_FULLY,IS_AUTHENTICATED_REMEMBERED] }

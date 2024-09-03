@@ -22,6 +22,7 @@ class AppFixtures extends Fixture
         $user1->setPrenom('Gilles');
         $user1->setTelephone('33450453289');
         $user1->setPseudo('Pseudo');
+        $user1->setRoles(['ROLE_USER']);
         $manager->persist($user1);
 
         $user2 = new User();
@@ -31,6 +32,7 @@ class AppFixtures extends Fixture
         $user2->setPrenom('Gilles2');
         $user2->setTelephone('33450453289');
         $user2->setPseudo('Pseudo');
+        $user2->setRoles(['ROLE_USER','ROLE_ADMIN']);
         $manager->persist($user2);
 
         $user3 = new User();
@@ -40,6 +42,7 @@ class AppFixtures extends Fixture
         $user3->setPrenom('Gilles3');
         $user3->setTelephone('33450453289');
         $user3->setPseudo('Pseudo');
+        $user3->setRoles(['ROLE_USER']);
         $manager->persist($user3);
 
 
