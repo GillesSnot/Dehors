@@ -13,10 +13,6 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ProfilController extends AbstractController
 {
-    public function __construct(private readonly UserRepository $userRepository)
-    {
-    }
-
     #[Route('/profil', name: 'app_profil')]
     public function index(): Response
     {
@@ -25,10 +21,11 @@ class ProfilController extends AbstractController
         ]);
     }
 
-    #[Route('/profil/update/{id}', name: 'app_update_profil')]
-    public function update(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/profil/update', name: 'app_update_profil')]
+    public function update(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->userRepository->find($id);
+        $user = $this->getUser();
+
         $userForm = $this->createForm(UserType::class, $user);
         $userForm->handleRequest($request);
 
