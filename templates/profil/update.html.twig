@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Update profil{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/natStyle.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <div>
+        <h1>Mon profil</h1>
+
+        {#        {{  form(userForm) }} #}
+
+        {{ form_start(userForm) }}
+        <div class="formGroup">
+            {{ form_row(userForm.pseudo) }}
+        </div>
+        <div class="formGroup">
+            {{ form_row(userForm.prenom) }}
+        </div>
+        <div class="formGroup">
+            {{ form_row(userForm.nom) }}
+        </div>
+        <div class="formGroup">
+            {{ form_row(userForm.telephone) }}
+        </div>
+        <div class="formGroup">
+            {{ form_row(userForm.email) }}
+        </div>
+        <div class="formGroup">
+            {{ form_row(userForm.password) }}
+        </div>
+        <div class="formGroup">
+            {{ form_row(userForm.campus) }}
+        </div>
+        <div class="formGroup">
+            {{ form_row(userForm.photo) }}
+        </div>
+
+        {{ form_end(userForm) }}
+    </div>
+{% endblock %}
