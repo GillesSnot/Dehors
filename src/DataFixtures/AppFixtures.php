@@ -2,10 +2,10 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
 use App\Entity\Campus;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
+use App\Entity\User;
 use App\Entity\Ville;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -62,14 +62,17 @@ class AppFixtures extends Fixture
 
 
         $campusCDB = new Campus();
+        $campusCDB->setNom('Campus Rennes');
         $campusCDB->setVille($chartresDeBretagne);
         $manager->persist($campusCDB);
 
         $campusNiort = new Campus();
+        $campusNiort->setNom('Campus Niort');
         $campusNiort->setVille($niort);
         $manager->persist($campusNiort);
 
         $campusNantes = new Campus();
+        $campusNantes->setNom('Campus Nantes');
         $campusNantes->setVille($nantes);
         $manager->persist($campusNantes);
 
@@ -113,8 +116,8 @@ class AppFixtures extends Fixture
         $sortieMediatheque->setNom('sortie Mediathèque');
         $sortieMediatheque->setCampus($campusCDB);
         $sortieMediatheque->setLieu($lieuMediatheque);
-        $sortieMediatheque->setDateSortie(new DateTime('-10 days'));
-        $sortieMediatheque->setDateFinInscription(new DateTime('-15 days'));
+        $sortieMediatheque->setDateSortie(new DateTime('+10 days'));
+        $sortieMediatheque->setDateFinInscription(new DateTime('+5 days'));
         $sortieMediatheque->setNombrePlace(10);
         $sortieMediatheque->setDuree(90);
         $sortieMediatheque->setDescription('go lire des livres');
@@ -130,7 +133,7 @@ class AppFixtures extends Fixture
         $sortiePiscine->setCampus($campusCDB);
         $sortiePiscine->setLieu($lieuPiscine);
         $sortiePiscine->setDateSortie(new DateTime('+10 days'));
-        $sortiePiscine->setDateFinInscription(new DateTime('-1 days'));
+        $sortiePiscine->setDateFinInscription(new DateTime('+5 days'));
         $sortiePiscine->setNombrePlace(10);
         $sortiePiscine->setDuree(90);
         $sortiePiscine->setDescription('go nager');
@@ -158,15 +161,48 @@ class AppFixtures extends Fixture
         $sortieParc->setNom('sortie Parc');
         $sortieParc->setCampus($campusNiort);
         $sortieParc->setLieu($lieuParc);
-        $sortieParc->setDateSortie(new DateTime('-1 days'));
-        $sortieParc->setDateFinInscription(new DateTime('-5 days'));
+        $sortieParc->setDateSortie(new DateTime('+10 days'));
+        $sortieParc->setDateFinInscription(new DateTime('+5 days'));
         $sortieParc->setNombrePlace(10);
-        $sortieParc->setDuree(900000000);
+        $sortieParc->setDuree(90);
         $sortieParc->setDescription('go parc');
         $sortieParc->setAnnulation(false);
         $sortieParc->setPubliee(true);
         $sortieParc->setOrganisateur($user1);
         $manager->persist($sortieParc);
+
+        $userJosette = new User();
+        $userJosette->setPseudo('Josette');
+        $userJosette->setPrenom('Josette');
+        $userJosette->setNom('Chalala');
+        $userJosette->setEmail('josette@gmail.com');
+        $userJosette->setTelephone('0123456789');
+        $userJosette->setPassword('$2y$10$llCLAI1SeEwdQ/kOhY4uwu4mMPsM7XGTCFJ8KZ7jID.LI1Lo.vUh6');
+        $userJosette->setRoles(['admin']);
+        $userJosette->setCampus($campusNiort);
+        $manager->persist($userJosette);
+
+        $userGeorges = new User();
+        $userGeorges->setPseudo('Georgio');
+        $userGeorges->setPrenom('Georges');
+        $userGeorges->setNom('Poulala');
+        $userGeorges->setEmail('georges@monmail.com');
+        $userGeorges->setTelephone('0567891234');
+        $userGeorges->setPassword('$2y$10$mAla0la5xd8Yq4JQR5qArOV2sXlzaESyR7XNNKilkya59b6E6pVe2');
+        $userGeorges->setRoles(['user']);
+        $userGeorges->setCampus($campusCDB);
+        $manager->persist($userGeorges);
+
+        $userFrenegonde = new User();
+        $userFrenegonde->setPseudo('Frefre');
+        $userFrenegonde->setPrenom('Frénégonde');
+        $userFrenegonde->setNom('Tuelili');
+        $userFrenegonde->setEmail('frefre44@tonmail.com');
+        $userFrenegonde->setTelephone('0654782114');
+        $userFrenegonde->setPassword('$2y$10$CPMm2Hq.K.2OYWKBWktoguT7lpKHgil6tok4hHQ9roxr5VOp6jnrG');
+        $userFrenegonde->setRoles(['user']);
+        $userFrenegonde->setCampus($campusNantes);
+        $manager->persist($userFrenegonde);
 
         $sortieParc2 = new Sortie();
         $sortieParc2->setNom('sortie Parc');
