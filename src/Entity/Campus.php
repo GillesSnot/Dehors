@@ -30,6 +30,9 @@ class Campus
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'campus')]
     private Collection $etudiants;
 
+    #[ORM\Column(length: 255)]
+    private string $nom;
+
     public function __construct()
     {
         $this->students = new ArrayCollection();
@@ -110,6 +113,18 @@ class Campus
                 $etudiant->setCampus(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): static
+    {
+        $this->nom = $nom;
 
         return $this;
     }
