@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Constants\SortieConstants;
 use App\Repository\SortieRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -51,6 +53,9 @@ class Sortie
 
     #[ORM\ManyToOne(inversedBy: 'sortiesOrganisees')]
     private ?User $organisateur = null;
+
+    #[ORM\Column]
+    private ?bool $publiee = null;
 
     public function __construct()
     {
@@ -191,7 +196,7 @@ class Sortie
     public function removeParticipant(User $participant): static
     {
         if ($this->participants->removeElement($participant)) {
-            $participants->removeInscriptionSortie($this);
+            $participant->removeInscriptionSortie($this);
         }
 
         return $this;
@@ -205,6 +210,46 @@ class Sortie
     public function setOrganisateur(?User $organisateur): static
     {
         $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
+    public function getNombreParticipants(): ?int
+    {
+        return count($this->participants);
+    }
+
+    public function getEtat(): ?string
+    {
+
+        if (false === $this->isPubliee()) {
+            return SortieConstants::ETAT_EN_CREATION;
+        }
+
+        $dateNow = new DateTime('now');
+    
+        if ($this->getDateSortie() < $dateNow && date_add($this->getDateSortie(),date_interval_create_from_date_string($this->getDuree() . " minutes")) > $dateNow) {
+            return SortieConstants::ETAT_EN_COURS;
+        } else if ($this->getDateSortie() < $dateNow) {
+            return SortieConstants::ETAT_PASSE;
+        } else {
+            if ($this->getDateFinInscription() < $dateNow || $this->getNombreParticipants() > $this->getNombrePlace()) {
+                return SortieConstants::ETAT_FERME;
+            } else {
+                return SortieConstants::ETAT_OUVERT;
+            }
+        }
+
+    }
+
+    public function isPubliee(): ?bool
+    {
+        return $this->publiee;
+    }
+
+    public function setPubliee(bool $publiee): static
+    {
+        $this->publiee = $publiee;
 
         return $this;
     }
