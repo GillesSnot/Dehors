@@ -169,8 +169,28 @@ class SortieController extends AbstractController
         if ($sortie->getParticipants()->contains($user)) {
             $sortie->removeParticipant($user);
             $this->em->flush();
-            $this->addFlash('success', 'Vous avez été désinscrit de ' . $sortie->getNom());
+            $this->addFlash('success', 'Vous avez bien été désinscrit de ' . $sortie->getNom());
+        }
+        return $this->redirectToRoute('app_sortie');
+    }
+
+    #[Route('/sortie/inscription/{idSortie}', name: 'app_inscription')]
+    public function inscription($idSortie): Response
+    {
+        $user = $this->getUser();
+        $sortie = $this->sortieRepo->findOneById($idSortie);
+        if (!$sortie->getParticipants()->contains($user) ) {
+            if ($sortie->getNombreParticipants() < $sortie->getNombrePlace()) {
+                $sortie->addParticipant($user);
+                $this->em->flush();
+                $this->addFlash('success', 'Vous avez bien été inscrit à ' . $sortie->getNom());
+            } else {
+                $this->addFlash('error', 'Vous n\'avez pas pu vous inscrire à ' . $sortie->getNom() . ': aucune place restante');
+            }
+        } else {
+            $this->addFlash('success', 'Vous êtes déjà inscrit à ' . $sortie->getNom());
         }
         return $this->redirectToRoute('app_sortie');
     }
 }
+    
