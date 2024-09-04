@@ -6,6 +6,7 @@ use App\Repository\CampusRepository;
 use App\Repository\SortieRepository;
 use App\Constants\SortieConstants;
 use App\Entity\Sortie;
+use App\Entity\User;
 use App\Model\SortieListModel;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,11 +25,12 @@ class SortieController extends AbstractController
     ) {}
 
     #[Route('/sortie', name: 'app_sortie')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         return $this->render('sortie/index.html.twig', [
             'sorties' => $this->sortieRepo->findAll(),
             'campus' => $this->campusRepo->findAll(),
+            'selectedCampusId' => $request->query->get('campusId') ?? $this->getUser()->getCampus()->getId(),
         ]);
     }
 
@@ -171,7 +173,7 @@ class SortieController extends AbstractController
             $this->em->flush();
             $this->addFlash('success', 'Vous avez bien été désinscrit de ' . $sortie->getNom());
         }
-        return $this->redirectToRoute('app_sortie');
+        return $this->redirectToRoute('app_sortie', ['campusId' => $sortie->getCampus()->getId()]);
     }
 
     #[Route('/sortie/inscription/{idSortie}', name: 'app_inscription')]
@@ -190,7 +192,20 @@ class SortieController extends AbstractController
         } else {
             $this->addFlash('success', 'Vous êtes déjà inscrit à ' . $sortie->getNom());
         }
-        return $this->redirectToRoute('app_sortie');
+        return $this->redirectToRoute('app_sortie', ['campusId' => $sortie->getCampus()->getId()]);
+    }
+
+    #[Route('/sortie/publier/{idSortie}', name: 'app_publier')]
+    public function publier($idSortie): Response
+    {
+        $user = $this->getUser();
+        $sortie = $this->sortieRepo->findOneById($idSortie);
+        if ($user === $sortie->getOrganisateur()) {
+            $sortie->setPubliee(true);
+            $this->em->flush();
+            $this->addFlash('success', 'Vous avez bien publié la sortie ' . $sortie->getNom());
+        }
+        return $this->redirectToRoute('app_sortie', ['campusId' => $sortie->getCampus()->getId()]);
     }
 }
     
