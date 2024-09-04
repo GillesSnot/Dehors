@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,10 +13,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ProfilController extends AbstractController
 {
-    #[Route('/profil', name: 'app_profil')]
-    public function index(): Response
+    public function __construct(
+        private readonly UserRepository $userRepository,
+    ) {}
+
+    #[Route('/profil/{id}', name: 'app_profil')]
+    public function index($id): Response
     {
-        $user = $this->getUser();
+        $user = $this->userRepository->find($id);
         return $this->render('profil/index.html.twig', [
             'user' => $user,
             'controller_name' => 'ProfilController'
