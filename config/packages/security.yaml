@@ -51,7 +51,6 @@ security:
 
         # Deny access to all other paths unless the user is authenticated
         - { path: ^/, roles: [IS_AUTHENTICATED_FULLY,IS_AUTHENTICATED_REMEMBERED] }
-
 when@test:
     security:
         password_hashers:
