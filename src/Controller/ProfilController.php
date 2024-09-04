@@ -23,7 +23,7 @@ class ProfilController extends AbstractController
     }
 
     #[Route('/profil/update', name: 'app_update_profil')]
-    public function update(Request $request, EntityManagerInterface $entityManager): Response
+    public function update(Request $request,UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
 
@@ -31,7 +31,8 @@ class ProfilController extends AbstractController
         $userForm->handleRequest($request);
 
         if($userForm->isSubmitted() && $userForm->isValid()) {
-
+            $password=$form->get('password')->getData();
+            $user->setPaswword($userPasswordHasher->hashPassword($user, $password));
             $entityManager->persist($user);
             $entityManager->flush();
 
