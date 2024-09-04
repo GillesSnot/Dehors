@@ -1,20 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProfilController!{% endblock %}
+{% block title %}Profil{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<div class="container-fluid mx-auto justify-content-center" style="width: 500px;">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/ndubois2022/Documents/Dehors/src/Controller/ProfilController.php</code></li>
-        <li>Your template at <code>C:/Users/ndubois2022/Documents/Dehors/templates/profil/index.html.twig</code></li>
-    </ul>
+    <h1 class="m-5">{{ user.pseudo }}</h1>
+
+    <table class="table">
+        <tbody>
+        <tr class="m-2">
+            <th scope="row" style="border: none;">Prénom :</th>
+            <td style="border: none;">{{ user.prenom }}</td>
+        </tr>
+        <tr class="m-5">
+            <th scope="row" style="border: none;">Nom :</th>
+            <td style="border: none;">{{ user.nom }}</td>
+        </tr>
+        <tr class="m-2">
+            <th scope="row" style="border: none;">Téléphone :</th>
+            <td style="border: none;">{{ user.telephone }}</td>
+        </tr>
+        <tr class="m-2">
+            <th scope="row" style="border: none;">Email :</th>
+            <td style="border: none;">{{ user.email }}</td>
+        </tr>
+        <tr class="m-2">
+            <th scope="row" style="border: none;">Campus :</th>
+            <td style="border: none;">{{ user.campus.nom }}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="col text-center">
+    <button type="button" class="btn btn-outline-info">Retour</button>
+    </div>
 </div>
 {% endblock %}
