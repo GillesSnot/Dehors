@@ -44,7 +44,7 @@
 
 
         <div style="overflow-x: hidden; overflow-y: auto; height:300px">
-            <table class="table table-striped">
+            <table class="table table-striped text-center">
                 <thead>
                     <tr>
                     <th scope="col">Nom de la sortie</th>
@@ -61,7 +61,7 @@
                 </tbody>
             </table>
         </div>
-        <a href="{{ path('app_register') }}">Créer une sortie</a>
+        <a class="btn btn-dark" href="{{ path('app_register') }}">Créer une sortie</a>
     </div>
 
 
@@ -126,9 +126,11 @@
                     let a = document.createElement("a")   
                     if (sortie.peutModifier) {
                         a.innerHTML = 'Modifier'
+                        a.className = 'btn btn-dark btn-sm m-1'
                         a.href = "/modifierSortie/" + sortie.id
                     } else {
                         a.innerHTML = 'Afficher'
+                        a.className = 'btn btn-dark btn-sm m-1'
                         a.href = "/consulterSortie/" + sortie.id
                     }
                     td.append(a)
@@ -136,6 +138,7 @@
                     if (sortie.peutModifier && 'En création' == sortie.etat) {
                         a = document.createElement("a")  
                         a.innerHTML = 'se désister'
+                        a.className = 'btn btn-dark btn-sm m-1'
                         a.href = "/sortie/publier/" + sortie.id
                         td.append(a)
                     }
@@ -143,7 +146,14 @@
                     if (sortie.inscrit) {
                         a = document.createElement("a")  
                         a.innerHTML = 'se désister'
+                        a.className = 'btn btn-dark btn-sm m-1'
                         a.href = "/sortie/desinscription/" + sortie.id
+                        td.append(a)
+                    } else {
+                        a = document.createElement("a")  
+                        a.innerHTML = 's\'inscrire'
+                        a.className = 'btn btn-dark btn-sm m-1'
+                        a.href = "/sortie/inscription/" + sortie.id
                         td.append(a)
                     }
                       
