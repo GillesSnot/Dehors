@@ -11,7 +11,7 @@
                     <label for='select_campus'> Campus </label>
                     <select name='select_campus'>
                         {% for campu in campus %}
-                            <option value='{{campu.id}}'> {{campu.ville.nom}} </option>
+                            <option {% if campu.id == selectedCampusId %} selected {% endif %} value='{{campu.id}}'> {{campu.ville.nom}} </option>
                         {% endfor %}
                     </select> <br>
 
@@ -137,7 +137,7 @@
 
                     if (sortie.peutModifier && 'En création' == sortie.etat) {
                         a = document.createElement("a")  
-                        a.innerHTML = 'se désister'
+                        a.innerHTML = 'Publier'
                         a.className = 'btn btn-dark btn-sm m-1'
                         a.href = "/sortie/publier/" + sortie.id
                         td.append(a)
@@ -145,13 +145,13 @@
 
                     if (sortie.inscrit) {
                         a = document.createElement("a")  
-                        a.innerHTML = 'se désister'
+                        a.innerHTML = 'Se désister'
                         a.className = 'btn btn-dark btn-sm m-1'
                         a.href = "/sortie/desinscription/" + sortie.id
                         td.append(a)
                     } else if( 'Fermé' != sortie.etat ) {
                         a = document.createElement("a")  
-                        a.innerHTML = 's\'inscrire'
+                        a.innerHTML = 'S\'inscrire'
                         a.className = 'btn btn-dark btn-sm m-1'
                         a.href = "/sortie/inscription/" + sortie.id
                         td.append(a)

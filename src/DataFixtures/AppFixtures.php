@@ -244,6 +244,20 @@ class AppFixtures extends Fixture
         $sortieParc2->setOrganisateur($user2);
         $manager->persist($sortieParc2);
 
+        $sortieParc3 = new Sortie();
+        $sortieParc3->setNom('sortie Parc');
+        $sortieParc3->setCampus($campusNiort);
+        $sortieParc3->setLieu($lieuParc);
+        $sortieParc3->setDateSortie(new DateTime('+10 days'));
+        $sortieParc3->setDateFinInscription(new DateTime('+5 days'));
+        $sortieParc3->setNombrePlace(10);
+        $sortieParc3->setDuree(90);
+        $sortieParc3->setDescription('go parc');
+        $sortieParc3->setAnnulation(false);
+        $sortieParc3->setPubliee(false);
+        $sortieParc3->setOrganisateur($user1);
+        $manager->persist($sortieParc3);
+
         $manager->flush();
     }
 }
