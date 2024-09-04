@@ -1,43 +1,52 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Update profil{% endblock %}
+
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('css/natStyle.css') }}">
 {% endblock %}
 
 {% block body %}
+    
+<div class="container-fluid mx-auto" style="width: 800px;"> <!-- Augmenter la largeur si nécessaire -->
+    <div class="d-flex align-items-start">
+        <!-- Image à gauche -->
+        <div class="me-4">
+            <img src="{{ user.photo }}" class="img-fluid rounded-circle" alt="Photo de {{ user.pseudo }}" style="width: 150px; height: 150px; object-fit: cover;">
+        </div>
+        
+        <!-- Formulaire à droite -->
+        <div>
+            <h1 class="mb-4">Mon profil</h1>
 
-    <div>
-        <h1>Mon profil</h1>
-
-        {#        {{  form(userForm) }} #}
-
-        {{ form_start(userForm) }}
-        <div class="formGroup">
-            {{ form_row(userForm.pseudo) }}
+            {{ form_start(userForm) }}
+            <div class="mb-3">
+                {{ form_row(userForm.pseudo) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(userForm.prenom) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(userForm.nom) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(userForm.telephone) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(userForm.email) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(userForm.password) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(userForm.campus) }}
+            </div>
+            <div class="mb-3">
+                {{ form_row(userForm.photo) }}
+            </div>
+            {{ form_end(userForm) }}
         </div>
-        <div class="formGroup">
-            {{ form_row(userForm.prenom) }}
-        </div>
-        <div class="formGroup">
-            {{ form_row(userForm.nom) }}
-        </div>
-        <div class="formGroup">
-            {{ form_row(userForm.telephone) }}
-        </div>
-        <div class="formGroup">
-            {{ form_row(userForm.email) }}
-        </div>
-        <div class="formGroup">
-            {{ form_row(userForm.password) }}
-        </div>
-        <div class="formGroup">
-            {{ form_row(userForm.campus) }}
-        </div>
-        <div class="formGroup">
-            {{ form_row(userForm.photo) }}
-        </div>
-
-        {{ form_end(userForm) }}
     </div>
+</div>
+  
 {% endblock %}
