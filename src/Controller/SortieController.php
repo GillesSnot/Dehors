@@ -169,8 +169,8 @@ class SortieController extends AbstractController
         if ($sortie->getParticipants()->contains($user)) {
             $sortie->removeParticipant($user);
             $this->em->flush();
+            $this->addFlash('success', 'Vous avez été désinscrit de ' . $sortie->getNom());
         }
-
         return $this->redirectToRoute('app_sortie');
     }
 }
