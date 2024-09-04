@@ -23,4 +23,12 @@ class SortieController extends AbstractController
             'sorties' => $this->sortieRepo->findAll()
         ]);
     }
+
+    #[Route('/consulterSortie/{id}', name: 'app_consulter_sortie')]
+    public function consulter($id): Response
+    {
+        return $this->render('sortie/consulterSortie.html.twig', [
+            'sortie' => $this->sortieRepo->find($id)
+        ]);
+    }
 }
