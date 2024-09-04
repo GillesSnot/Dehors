@@ -6,6 +6,7 @@ use App\Form\UserType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -31,12 +32,27 @@ class ProfilController extends AbstractController
         $userForm->handleRequest($request);
 
         if($userForm->isSubmitted() && $userForm->isValid()) {
-            $password=$form->get('password')->getData();
-            $user->setPaswword($userPasswordHasher->hashPassword($user, $password));
+            if(!empty($userForm->get('password')->getData())){
+                $password=$userForm->get('password')->getData();
+                $user->setPassword($userPasswordHasher->hashPassword($user, $password));
+            }
+            if(!empty($userForm->get('photo')->getData())){
+                $photo=$userForm->get('photo')->getData();
+                $imagedata = file_get_contents($photo);
+                $base64 = base64_encode($imagedata);
+                $src = 'data: '. $photo->guessExtension().';base64,'.$base64;
+                $user->setPhoto($src);
+            }
+            
+
+            // Format the image SRC:  data:{mime};base64,{data};
+           
+            
+            
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_profil');
+            return $this->redirectToRoute('app_update_profil');
         }
         return $this->render('profil/update.html.twig', [
             'userForm' => $userForm->createView()

@@ -6,9 +6,10 @@
 {% endblock %}
 
 {% block body %}
-
-    <div>
-        <h1>Mon profil</h1>
+    
+    <div class="container-fluid mx-auto justify-content-center" style="width: 500px;">
+    
+        <h1 class="m-5">Mon profil</h1>
 
         {#        {{  form(userForm) }} #}
 
@@ -37,7 +38,7 @@
         <div class="formGroup">
             {{ form_row(userForm.photo) }}
         </div>
-
         {{ form_end(userForm) }}
     </div>
+      
 {% endblock %}
