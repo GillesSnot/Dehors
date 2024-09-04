@@ -16,7 +16,7 @@
                     </select> <br>
 
                     <label for='text_recherche'> Le nom de la sortie contient </label>
-                    <input name='text_recherche' id='text_recherche' type="text" ></input> <br>
+                    <input name='text_recherche' placeholder='recherche...' id='text_recherche' type="text" ></input> <br>
 
                     <label for='date_debut'> Entre </label>
                     <input name='date_debut' type="date" ></input>
@@ -149,7 +149,7 @@
                         a.className = 'btn btn-dark btn-sm m-1'
                         a.href = "/sortie/desinscription/" + sortie.id
                         td.append(a)
-                    } else {
+                    } else if( 'Fermé' != sortie.etat ) {
                         a = document.createElement("a")  
                         a.innerHTML = 's\'inscrire'
                         a.className = 'btn btn-dark btn-sm m-1'

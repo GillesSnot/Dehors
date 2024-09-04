@@ -21,6 +21,11 @@
                 {{ message }}
             </div>
         {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
 
         {% block body %}{% endblock %}
     </body>
@@ -31,7 +36,7 @@
         for (const alert of alerts) {
             setTimeout( function() {
                 alert.remove();
-            }, 3000);
+            }, 5000);
         }
     </script>
 </html>
