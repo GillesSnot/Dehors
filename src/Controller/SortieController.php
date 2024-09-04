@@ -160,4 +160,17 @@ class SortieController extends AbstractController
 
         return new JsonResponse($sortiesList);
     }
+
+    #[Route('/sortie/desinscription/{idSortie}', name: 'app_desinscription')]
+    public function desinscription($idSortie): Response
+    {
+        $user = $this->getUser();
+        $sortie = $this->sortieRepo->findOneById($idSortie);
+        if ($sortie->getParticipants()->contains($user)) {
+            $sortie->removeParticipant($user);
+            $this->em->flush();
+            $this->addFlash('success', 'Vous avez été désinscrit de ' . $sortie->getNom());
+        }
+        return $this->redirectToRoute('app_sortie');
+    }
 }

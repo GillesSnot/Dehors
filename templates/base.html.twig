@@ -16,6 +16,22 @@
         {% endblock %}
     </head>
     <body>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
         {% block body %}{% endblock %}
     </body>
+
+    <script>
+        const alerts = document.querySelectorAll('[class*="alert-"]')
+        console.log(alerts)
+        for (const alert of alerts) {
+            setTimeout( function() {
+                alert.remove();
+            }, 3000);
+        }
+    </script>
 </html>
