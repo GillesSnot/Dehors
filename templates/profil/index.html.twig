@@ -3,11 +3,11 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
-<div class="container-fluid mx-auto justify-content-center" style="width: 500px;">
+<div class="container-fluid mx-auto justify-content-center" style="width: 800px;">
 
     <div class="row align-items-center">
         <div class="col-md-4">
-            <img src="{{ user.photo }}" class="img-fluid " alt="Photo de {{ user.pseudo }}">
+            <img src="{{ user.photo }}" class="img-fluid rounded-circle" alt="Photo de {{ user.pseudo }}">
         </div>
         <div class="col-md-8">
             <h1 class="m-5">{{ user.pseudo }}</h1>
