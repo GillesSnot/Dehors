@@ -15,36 +15,7 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $user1 = new User();
-        $user1->setPassword('$2y$13$slruzjo7Bv.8QG4kkntzyOl08OgWmdH53jTx0RG1zxqJNuTu7ci.u'); // mdp : password
-        $user1->setEmail('test1@test.fr');
-        $user1->setNom('Kebab');
-        $user1->setPrenom('Gilles');
-        $user1->setTelephone('33450453289');
-        $user1->setPseudo('Pseudo');
-        $user1->setRoles(['ROLE_USER']);
-        $manager->persist($user1);
-
-        $user2 = new User();
-        $user2->setPassword('$2y$13$slruzjo7Bv.8QG4kkntzyOl08OgWmdH53jTx0RG1zxqJNuTu7ci.u'); // mdp : password
-        $user2->setEmail('test2@test.fr');
-        $user2->setNom('Kebab2');
-        $user2->setPrenom('Gilles2');
-        $user2->setTelephone('33450453289');
-        $user2->setPseudo('Pseudo');
-        $user2->setRoles(['ROLE_USER','ROLE_ADMIN']);
-        $manager->persist($user2);
-
-        $user3 = new User();
-        $user3->setPassword('$2y$13$slruzjo7Bv.8QG4kkntzyOl08OgWmdH53jTx0RG1zxqJNuTu7ci.u'); // mdp : password
-        $user3->setEmail('test3@test.fr');
-        $user3->setNom('Kebab2');
-        $user3->setPrenom('Gilles3');
-        $user3->setTelephone('33450453289');
-        $user3->setPseudo('Pseudo');
-        $user3->setRoles(['ROLE_USER']);
-        $manager->persist($user3);
-
+       
 
 
         $chartresDeBretagne = new Ville();
@@ -181,7 +152,7 @@ class AppFixtures extends Fixture
         $userJosette->setEmail('josette@gmail.com');
         $userJosette->setTelephone('0123456789');
         $userJosette->setPassword('$2y$10$llCLAI1SeEwdQ/kOhY4uwu4mMPsM7XGTCFJ8KZ7jID.LI1Lo.vUh6');
-        $userJosette->setRoles(['admin']);
+        $userJosette->setRoles(['ROLE_ADMIN']);
         $userJosette->setCampus($campusNiort);
         $manager->persist($userJosette);
 
@@ -192,7 +163,7 @@ class AppFixtures extends Fixture
         $userGeorges->setEmail('georges@monmail.com');
         $userGeorges->setTelephone('0567891234');
         $userGeorges->setPassword('$2y$10$mAla0la5xd8Yq4JQR5qArOV2sXlzaESyR7XNNKilkya59b6E6pVe2');
-        $userGeorges->setRoles(['user']);
+        $userGeorges->setRoles(['ROLE_USER']);
         $userGeorges->setCampus($campusCDB);
         $manager->persist($userGeorges);
 
@@ -203,9 +174,45 @@ class AppFixtures extends Fixture
         $userFrenegonde->setEmail('frefre44@tonmail.com');
         $userFrenegonde->setTelephone('0654782114');
         $userFrenegonde->setPassword('$2y$10$CPMm2Hq.K.2OYWKBWktoguT7lpKHgil6tok4hHQ9roxr5VOp6jnrG');
-        $userFrenegonde->setRoles(['user']);
+        $userFrenegonde->setRoles(['ROLE_USER']);
         $userFrenegonde->setCampus($campusNantes);
         $manager->persist($userFrenegonde);
+
+
+
+        $user1 = new User();
+        $user1->setPassword('$2y$13$slruzjo7Bv.8QG4kkntzyOl08OgWmdH53jTx0RG1zxqJNuTu7ci.u'); // mdp : password
+        $user1->setEmail('test1@test.fr');
+        $user1->setNom('Kebab');
+        $user1->setPrenom('Gilles');
+        $user1->setTelephone('33450453289');
+        $user1->setPseudo('Pseudo');
+        $user1->setRoles(['ROLE_USER']);
+        $user1->setCampus($campusNiort);
+        $manager->persist($user1);
+
+        $user2 = new User();
+        $user2->setPassword('$2y$13$slruzjo7Bv.8QG4kkntzyOl08OgWmdH53jTx0RG1zxqJNuTu7ci.u'); // mdp : password
+        $user2->setEmail('test2@test.fr');
+        $user2->setNom('Kebab2');
+        $user2->setPrenom('Gilles2');
+        $user2->setTelephone('33450453289');
+        $user2->setPseudo('Pseudo');
+        $user2->setRoles(['ROLE_USER','ROLE_ADMIN']);
+        $user2->setCampus($campusCDB);
+        $manager->persist($user2);
+
+        $user3 = new User();
+        $user3->setPassword('$2y$13$slruzjo7Bv.8QG4kkntzyOl08OgWmdH53jTx0RG1zxqJNuTu7ci.u'); // mdp : password
+        $user3->setEmail('test3@test.fr');
+        $user3->setNom('Kebab2');
+        $user3->setPrenom('Gilles3');
+        $user3->setTelephone('33450453289');
+        $user3->setPseudo('Pseudo');
+        $user3->setRoles(['ROLE_USER']);
+        $user3->setCampus($campusNantes);
+        $manager->persist($user3);
+
 
         $sortieParc2 = new Sortie();
         $sortieParc2->setNom('sortie Parc');
