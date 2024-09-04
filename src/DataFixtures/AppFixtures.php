@@ -86,65 +86,6 @@ class AppFixtures extends Fixture
 
 
 
-        $sortieMediatheque = new Sortie();
-        $sortieMediatheque->setNom('sortie Mediathèque');
-        $sortieMediatheque->setCampus($campusCDB);
-        $sortieMediatheque->setLieu($lieuMediatheque);
-        $sortieMediatheque->setDateSortie(new DateTime('+10 days'));
-        $sortieMediatheque->setDateFinInscription(new DateTime('+5 days'));
-        $sortieMediatheque->setNombrePlace(10);
-        $sortieMediatheque->setDuree(90);
-        $sortieMediatheque->setDescription('go lire des livres');
-        $sortieMediatheque->setAnnulation(false);
-        $sortieMediatheque->setPubliee(true);
-        $sortieMediatheque->setOrganisateur($user1);
-        $sortieMediatheque->addParticipant($user1);
-        $sortieMediatheque->addParticipant($user2);
-        $manager->persist($sortieMediatheque);
-
-        $sortiePiscine = new Sortie();
-        $sortiePiscine->setNom('sortie Piscine');
-        $sortiePiscine->setCampus($campusCDB);
-        $sortiePiscine->setLieu($lieuPiscine);
-        $sortiePiscine->setDateSortie(new DateTime('+10 days'));
-        $sortiePiscine->setDateFinInscription(new DateTime('+5 days'));
-        $sortiePiscine->setNombrePlace(10);
-        $sortiePiscine->setDuree(90);
-        $sortiePiscine->setDescription('go nager');
-        $sortiePiscine->setAnnulation(false);
-        $sortiePiscine->setPubliee(true);
-        $sortiePiscine->setOrganisateur($user2);
-        $manager->persist($sortiePiscine);
-
-        $sortiePiscine2 = new Sortie();
-        $sortiePiscine2->setNom('sortie Piscine plein');
-        $sortiePiscine2->setCampus($campusCDB);
-        $sortiePiscine2->setLieu($lieuPiscine);
-        $sortiePiscine2->setDateSortie(new DateTime('+10 days'));
-        $sortiePiscine2->setDateFinInscription(new DateTime('-1 days'));
-        $sortiePiscine2->setNombrePlace(1);
-        $sortiePiscine2->setDuree(90);
-        $sortiePiscine2->setDescription('go nager');
-        $sortiePiscine2->setAnnulation(false);
-        $sortiePiscine2->setPubliee(true);
-        $sortiePiscine2->addParticipant($user2);
-        $sortiePiscine2->setOrganisateur($user2);
-        $manager->persist($sortiePiscine2);
-
-        $sortieParc = new Sortie();
-        $sortieParc->setNom('sortie Parc');
-        $sortieParc->setCampus($campusNiort);
-        $sortieParc->setLieu($lieuParc);
-        $sortieParc->setDateSortie(new DateTime('+10 days'));
-        $sortieParc->setDateFinInscription(new DateTime('+5 days'));
-        $sortieParc->setNombrePlace(10);
-        $sortieParc->setDuree(90);
-        $sortieParc->setDescription('go parc');
-        $sortieParc->setAnnulation(false);
-        $sortieParc->setPubliee(true);
-        $sortieParc->setOrganisateur($user1);
-        $manager->persist($sortieParc);
-
         $userJosette = new User();
         $userJosette->setPseudo('Josette');
         $userJosette->setPrenom('Josette');
@@ -227,6 +168,68 @@ class AppFixtures extends Fixture
         $sortieParc2->setPubliee(false);
         $sortieParc2->setOrganisateur($user1);
         $manager->persist($sortieParc2);
+
+
+        
+        $sortieMediatheque = new Sortie();
+        $sortieMediatheque->setNom('sortie Mediathèque');
+        $sortieMediatheque->setCampus($campusCDB);
+        $sortieMediatheque->setLieu($lieuMediatheque);
+        $sortieMediatheque->setDateSortie(new DateTime('+10 days'));
+        $sortieMediatheque->setDateFinInscription(new DateTime('+5 days'));
+        $sortieMediatheque->setNombrePlace(10);
+        $sortieMediatheque->setDuree(90);
+        $sortieMediatheque->setDescription('go lire des livres');
+        $sortieMediatheque->setAnnulation(false);
+        $sortieMediatheque->setPubliee(true);
+        $sortieMediatheque->setOrganisateur($user1);
+        $sortieMediatheque->addParticipant($user1);
+        $sortieMediatheque->addParticipant($user2);
+        $manager->persist($sortieMediatheque);
+
+        $sortiePiscine = new Sortie();
+        $sortiePiscine->setNom('sortie Piscine');
+        $sortiePiscine->setCampus($campusCDB);
+        $sortiePiscine->setLieu($lieuPiscine);
+        $sortiePiscine->setDateSortie(new DateTime('+10 days'));
+        $sortiePiscine->setDateFinInscription(new DateTime('+5 days'));
+        $sortiePiscine->setNombrePlace(10);
+        $sortiePiscine->setDuree(90);
+        $sortiePiscine->setDescription('go nager');
+        $sortiePiscine->setAnnulation(false);
+        $sortiePiscine->setPubliee(true);
+        $sortiePiscine->setOrganisateur($user2);
+        $manager->persist($sortiePiscine);
+
+        $sortiePiscine2 = new Sortie();
+        $sortiePiscine2->setNom('sortie Piscine plein');
+        $sortiePiscine2->setCampus($campusCDB);
+        $sortiePiscine2->setLieu($lieuPiscine);
+        $sortiePiscine2->setDateSortie(new DateTime('+10 days'));
+        $sortiePiscine2->setDateFinInscription(new DateTime('-1 days'));
+        $sortiePiscine2->setNombrePlace(1);
+        $sortiePiscine2->setDuree(90);
+        $sortiePiscine2->setDescription('go nager');
+        $sortiePiscine2->setAnnulation(false);
+        $sortiePiscine2->setPubliee(true);
+        $sortiePiscine2->addParticipant($user2);
+        $sortiePiscine2->setOrganisateur($user2);
+        $manager->persist($sortiePiscine2);
+
+        $sortieParc = new Sortie();
+        $sortieParc->setNom('sortie Parc');
+        $sortieParc->setCampus($campusNiort);
+        $sortieParc->setLieu($lieuParc);
+        $sortieParc->setDateSortie(new DateTime('+10 days'));
+        $sortieParc->setDateFinInscription(new DateTime('+5 days'));
+        $sortieParc->setNombrePlace(10);
+        $sortieParc->setDuree(90);
+        $sortieParc->setDescription('go parc');
+        $sortieParc->setAnnulation(false);
+        $sortieParc->setPubliee(true);
+        $sortieParc->setOrganisateur($user1);
+        $manager->persist($sortieParc);
+
 
         $manager->flush();
     }
