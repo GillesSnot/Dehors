@@ -22,12 +22,12 @@ class UserType extends AbstractType
         $builder
             ->add('email', EmailType::class)
 //            ->add('roles')
-            ->add('password', PasswordType::class, ['label'=>'Mot de passe'])
+            ->add('password', PasswordType::class, ['label'=>'Mot de passe', 'required' => false])
             ->add('pseudo', TextType::class)
             ->add('prenom', TextType::class)
             ->add('nom', TextType::class)
             ->add('telephone', TextType::class)
-            ->add('photo', FileType::class, ['label'=>'Ma photo'])
+            ->add('photo', FileType::class, ['label'=>'Ma photo', 'required' => false])
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
                 'choice_label' => 'nom',
