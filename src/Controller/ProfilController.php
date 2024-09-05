@@ -29,40 +29,52 @@ class ProfilController extends AbstractController
     }
 
     #[Route('/profil/update/', name: 'app_update_profil')]
-    public function update(Request $request,UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
-    {
-        $user = $this->getUser();
-        $userForm = $this->createForm(UserType::class, $user);
-        $userForm->handleRequest($request);
+public function update(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+{
+    $user = $this->getUser();
+    $userForm = $this->createForm(UserType::class, $user);
+    $userForm->handleRequest($request);
 
-        if($userForm->isSubmitted() && $userForm->isValid()) {
-            if(!empty($userForm->get('password')->getData())){
-                $password=$userForm->get('password')->getData();
-                $user->setPassword($userPasswordHasher->hashPassword($user, $password));
-            }
-            if(!empty($userForm->get('photo')->getData())){
-                $photo=$userForm->get('photo')->getData();
-                $imagedata = file_get_contents($photo);
-                $base64 = base64_encode($imagedata);
-                $src = 'data: '. $photo->guessExtension().';base64,'.$base64;
-                $user->setPhoto($src);
-            }
-            
-
-            // Format the image SRC:  data:{mime};base64,{data};
-           
-            
-            
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_update_profil');
+    if ($userForm->isSubmitted() && $userForm->isValid()) {
+        // Handle password update
+        if (!empty($userForm->get('password')->getData())) {
+            $password = $userForm->get('password')->getData();
+            $user->setPassword($userPasswordHasher->hashPassword($user, $password));
         }
-        return $this->render('profil/update.html.twig', [
-            'userForm' => $userForm->createView(),
-            'user' => $user
-        ]);
+
+        // Handle photo update
+        if (!empty($userForm->get('photo')->getData())) {
+            /** @var UploadedFile $photo */
+            $photo = $userForm->get('photo')->getData();
+
+            // Read the file content
+            $imagedata = file_get_contents($photo->getPathname());
+
+            // Convert image to base64
+            $base64 = base64_encode($imagedata);
+
+            // Create the full data URL with MIME type
+            $mimeType = $photo->getMimeType();
+            $src = 'data:' . $mimeType . ';base64,' . $base64;
+
+            // Set the base64 image as photo in the User entity
+            $user->setPhoto($src);
+        }
+
+        // Persist and flush changes to the database
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        // Redirect after successful update
+        return $this->redirectToRoute('app_update_profil');
     }
+
+    // Render the update form
+    return $this->render('profil/update.html.twig', [
+        'userForm' => $userForm->createView(),
+        'user' => $user,
+    ]);
+}
 
 
 }
