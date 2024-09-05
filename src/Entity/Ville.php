@@ -16,10 +16,10 @@ class Ville
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    private string $nom;
 
     #[ORM\Column(length: 255)]
-    private ?string $cp = null;
+    private string $cp;
 
     /**
      * @var Collection<int, Lieu>
