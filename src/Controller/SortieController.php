@@ -150,8 +150,8 @@ class SortieController extends AbstractController
             return [
                 "id" => $sortie->getId(),
                 "nom" => $sortie->getNom(),
-                "dateSortie" => $sortie->getDateSortie()->format('d-m-Y H:i:s'),
-                "dateFinInscritpion" => $sortie->getDateFinInscription()->format('d-m-Y H:i:s'),
+                "dateSortie" => $sortie->getDateSortie()->format('d-m-Y H:i'),
+                "dateFinInscritpion" => $sortie->getDateFinInscription()->format('d-m-Y'),
                 "inscritsPlaces" => $sortie->getNombreParticipants() . '/' . $sortie->getNombrePlace(),
                 "organisateur" => $sortie->getOrganisateur()->getPrenom() . ' ' . $sortie->getOrganisateur()->getNom(),
                 "organisateurId" => $sortie->getOrganisateur()->getId(),
