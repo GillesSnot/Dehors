@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Générate token{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/natStyle.css') }}">
+{% endblock %}
+
+{% block body %}
+    
+<div class="container-fluid mx-auto" style="width: 800px;"> <!-- Augmenter la largeur si nécessaire -->
+    <div class="d-flex align-items-start">        
+        <div>
+            <h1 class="mb-4">Génération de lien</h1>
+
+            {{ form_start(userForm) }}
+            <div class="mb-3">
+                {{ form_row(userForm.pseudo) }}
+            </div>
+              <button class="btn btn-lg btn-primary" type="submit">
+            Generate
+        </button>
+            {{ form_end(userForm) }}
+            
+        </div>
+    </div>
+</div>
+  {% if url %}
+             <a href={{ url }} ></a>
+        {% endif %}
+{% endblock %}
+
+      
+
+      
+
+      
