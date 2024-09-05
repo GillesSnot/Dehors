@@ -10,4 +10,5 @@ class SortieConstants
     const ETAT_OUVERT ='Ouvert';
     const ETAT_FERME ='Fermé';
     const ETAT_PASSE ='Passé';
+    const ETAT_ARCHIVEE ='Historisée';
 }

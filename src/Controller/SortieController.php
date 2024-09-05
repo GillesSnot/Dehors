@@ -51,6 +51,13 @@ class SortieController extends AbstractController
 
         $sorties = $this->sortieRepo->findAll();
 
+        // filtre les sorties de plus d'un mois archivées
+        $sorties = array_filter($sorties, function(Sortie $sortie){
+            if (SortieConstants::ETAT_ARCHIVEE !== $sortie->getEtat()) {
+                return $sortie;
+            }
+        });
+
         // filtre pour n'afficher les sorties non publiées de l'utilisateur connecté
         if (isset($user)) {
             $sorties = array_filter( $sorties, function(Sortie $sortie) use ($user) {
@@ -150,8 +157,8 @@ class SortieController extends AbstractController
             return [
                 "id" => $sortie->getId(),
                 "nom" => $sortie->getNom(),
-                "dateSortie" => $sortie->getDateSortie()->format('d-m-Y H:i:s'),
-                "dateFinInscritpion" => $sortie->getDateFinInscription()->format('d-m-Y H:i:s'),
+                "dateSortie" => $sortie->getDateSortie()->format('d-m-Y H:i'),
+                "dateFinInscritpion" => $sortie->getDateFinInscription()->format('d-m-Y'),
                 "inscritsPlaces" => $sortie->getNombreParticipants() . '/' . $sortie->getNombrePlace(),
                 "organisateur" => $sortie->getOrganisateur()->getPrenom() . ' ' . $sortie->getOrganisateur()->getNom(),
                 "organisateurId" => $sortie->getOrganisateur()->getId(),

@@ -2,10 +2,8 @@
 {% block title %}Liste des sorties{% endblock %}
 
 {% block body %}
-
-    <div class="w-75 position-absolute top-50 start-50 translate-middle" >
-
-        <form id="form_search">
+    <div class="d-flex flex-column h-100">
+        <form id="form_search" class="">
             <div class="row align-items-start">
                 <div class="col">
                     <label for='select_campus'> Campus </label>
@@ -43,7 +41,7 @@
         </form>
 
 
-        <div style="overflow-x: hidden; overflow-y: auto; height:300px">
+        <div style="overflow-x: auto; overflow-y: auto; flex-grow: 1; min-height: 400px" class="my-3">
             <table class="table table-striped text-center">
                 <thead>
                     <tr>
@@ -63,7 +61,6 @@
         </div>
         <a class="btn btn-dark" href="{{ path('app_register') }}">Créer une sortie</a>
     </div>
-
 
     <script defer>
         loadSorties()
