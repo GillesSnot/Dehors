@@ -7,6 +7,8 @@ use App\Repository\SortieRepository;
 use App\Constants\SortieConstants;
 use App\Entity\Sortie;
 use App\Entity\User;
+use App\Form\AnnulationSortieFormType;
+use App\Form\AnnulationSortieType;
 use App\Model\SortieListModel;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,6 +27,7 @@ class SortieController extends AbstractController
     ) {}
 
     #[Route('/sortie', name: 'app_sortie')]
+    #[Route('/', name: 'app_sortie_blank')]
     public function index(Request $request): Response
     {
         return $this->render('sortie/index.html.twig', [
@@ -214,6 +217,34 @@ class SortieController extends AbstractController
             $this->addFlash('success', 'Vous avez bien publié la sortie ' . $sortie->getNom());
         }
         return $this->redirectToRoute('app_sortie', ['campusId' => $sortie->getCampus()->getId()]);
+    }
+
+    #[Route('/annulerSortie/{idSortie}', name: 'app_annuler')]
+    public function annuler($idSortie, Request $request): Response
+    {
+        $user = $this->getUser();
+        $sortie = $this->sortieRepo->findOneById($idSortie);
+        if (
+            $user !== $sortie->getOrganisateur() 
+            || SortieConstants::ETAT_ANNULEE === $sortie->getEtat()
+            || new DateTime('now') > $sortie->getDateSortie() 
+            ) 
+        {
+            return $this->redirectToRoute('app_sortie');
+        }
+
+        $annulationForm = $this->createForm(AnnulationSortieType::class);
+        $annulationForm->handleRequest($request);
+
+        if($annulationForm->isSubmitted() && $annulationForm->isValid()) {
+            $sortie->setDescription($sortie->getDescription() . ' - ' . $annulationForm->getData()['motif']);
+            $sortie->setAnnulation(true);
+            $this->em->flush();
+        }
+        $this->addFlash('success', 'Vous avez bien annulé la sortie ' . $sortie->getNom());
+        return $this->render('sortie/annulerSortie.html.twig', [
+            'annulationForm' => $annulationForm,
+        ]);
     }
 }
     

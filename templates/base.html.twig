@@ -18,12 +18,12 @@
                 {% include 'generic/Navbar.html.twig' %}    
             {% endif %}
             {% for message in app.flashes('success') %}
-                <div class="alert alert-success">
+                <div class="alert alert-success position-absolute start-50 my-5 translate-middle">
                     {{ message }}
                 </div>
             {% endfor %}
             {% for message in app.flashes('error') %}
-                <div class="alert alert-danger">
+                <div class="alert alert-danger position-absolute start-50 my-5 translate-middle">
                     {{ message }}
                 </div>
             {% endfor %}

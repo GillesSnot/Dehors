@@ -252,7 +252,7 @@ class AppFixtures extends Fixture
             $sortieParc3->setNombrePlace(10);
             $sortieParc3->setDuree(90);
             $sortieParc3->setDescription('go parc');
-            $sortieParc3->setAnnulation(false);
+            $sortieParc3->setAnnulation(true);
             $sortieParc3->setPubliee(false);
             $sortieParc3->setOrganisateur($user1);
             $manager->persist($sortieParc3);
