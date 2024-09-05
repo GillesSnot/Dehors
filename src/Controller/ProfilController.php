@@ -73,6 +73,7 @@ public function update(Request $request, UserPasswordHasherInterface $userPasswo
     return $this->render('profil/update.html.twig', [
         'userForm' => $userForm->createView(),
         'user' => $user,
+        'photo' => stream_get_contents($user->getPhoto())
     ]);
 }
 
