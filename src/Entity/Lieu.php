@@ -16,10 +16,10 @@ class Lieu
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    private string $nom;
 
     #[ORM\Column(length: 255)]
-    private ?string $rue = null;
+    private string $rue;
 
     #[ORM\Column]
     private ?float $latitude = null;
@@ -28,7 +28,7 @@ class Lieu
     private ?float $longitude = null;
 
     #[ORM\ManyToOne(inversedBy: 'Lieux')]
-    private ?Ville $ville = null;
+    private Ville $ville;
 
     /**
      * @var Collection<int, Sortie>
