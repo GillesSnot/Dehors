@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Repository\LieuRepository;
-use App\Repository\CampusRepository;
 use App\Repository\SortieRepository;
 use App\Constants\SortieConstants;
 use App\Entity\User;
@@ -253,9 +252,13 @@ class SortieController extends AbstractController
     public function create(Request $request): Response
     {
         $user = $this->getUser();
+        $campus = $user->getCampus();
 
         $sortie = new Sortie();
-        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm = $this->createForm(SortieType::class, $sortie, [
+            'default_campus' => $campus
+        ]);
+
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
