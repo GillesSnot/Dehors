@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Token;
 use App\Repository\UserRepository;
+use App\Repository\TokenRepository;
 use App\Form\PasswordType;
+use App\Form\PseudoType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +20,8 @@ class SecurityController extends AbstractController
 {
     public function __construct(
         private readonly UserRepository $userRepository,
+        private readonly TokenRepository $tokenRepository,
+        private readonly EntityManagerInterface $entityManager,
     ) {}
 
     #[Route(path: '/login', name: 'app_login')]
@@ -46,23 +51,64 @@ class SecurityController extends AbstractController
         $response->headers->clearCookie('REMEMBERME');
         $response->send();
     }
-    #[Route(path: '/generateToken/{id}', name: 'app_generate_password_reset')]
-    public function generatePasswordReset($id,Request $request,UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManage): Response
+    #[Route(path: '/generateToken', name: 'app_generate_password_reset')]
+    public function generatePasswordReset(Request $request,UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         $userForm = $this->createForm(PseudoType::class, $user);
         $userForm->handleRequest($request);
+        $url='';
 
         if($userForm->isSubmitted() && $userForm->isValid()) {
-            $password=$userForm->get('password')->getData();
-            $user->setPassword($userPasswordHasher->hashPassword($user, $password));
-            $entityManager->persist($user);
+            $user= $this->userRepository->findOneBy(['pseudo'=>$userForm->get('pseudo')->getData()]);
+            $url=generateToken($length = 64);
+            $token = new Token();
+            $token->setToken($url);
+            $token->setUser($user);
+            // Persister le token dans la base de données
+            $entityManager->persist($token);
             $entityManager->flush();
+            return $this->render('security/generateToken.html.twig', [
+                'userForm' => $userForm->createView(),
+                'url'=>   getUrlOrigin().'/resetPassword/'.$url,
+            ]);
         }
-
         return $this->render('security/generateToken.html.twig', [
-            'last_username' => $lastUsername,
-            'error' => $error,
+            'userForm' => $userForm->createView(),
+            'url'=>  $url,
         ]);
     }
+    #[Route(path: '/resetPassword/{token}', name: 'app_reset_password')]
+    public function resetPassword($token,Request $request,UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    {
+        // $user= $this->userRepository->findOneBy(['token'=>$userForm->get('token')->getData()]);3
+        $user= $this->tokenRepository->findOneBy(['token'=>$token])->getUser();
+        $userForm = $this->createForm(PasswordType::class, $user);
+        $userForm->handleRequest($request);
+
+        if($userForm->isSubmitted() && $userForm->isValid()) {
+            if(!empty($userForm->get('password')->getData())){
+                $password=$userForm->get('password')->getData();
+                $user->setPassword($userPasswordHasher->hashPassword($user, $password));
+            }
+            // Format the image SRC:  data:{mime};base64,{data};
+            $entityManager->persist($user);
+            $entityManager->flush();
+            
+            return $this->redirectToRoute('app_login');
+        }
+        return $this->render('security/resetPassword.html.twig', [
+            'userForm' => $userForm->createView(),
+        ]);       
+    }
+}
+
+function generateToken($length = 64) {
+    return bin2hex(random_bytes($length / 2));
+}
+
+function getUrlOrigin() {
+    $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    return $scheme . '://' . $host;
 }
