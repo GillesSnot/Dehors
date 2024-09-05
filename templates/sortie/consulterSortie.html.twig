@@ -1,0 +1,75 @@
+
+{% extends 'base.html.twig' %}
+{% block title %}Liste des sorties{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+
+        <h2 class="text-center mb-4">Afficher une sortie</h2>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Nom :</th>
+                            <td>{{ sortie.nom }}</td>
+                            <th scope="row">Campus :</th>
+                            <td>{{ sortie.campus.nom }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Date et heure de la sortie :</th>
+                            <td>{{ sortie.dateSortie|format_datetime() }}</td>
+                            <th scope="row">Lieu :</th>
+                            <td>{{ sortie.lieu.nom }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Date limite inscription :</th>
+                            <td>{{ sortie.dateFinInscription|format_datetime() }}</td>
+                            <th scope="row">Rue :</th>
+                            <td>{{ sortie.lieu.rue }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Nombre de places :</th>
+                            <td>{{ sortie.nombreParticipants }}/{{ sortie.nombrePlace }}</td>
+                            <th scope="row">Code postal :</th>
+                            <td>{{ sortie.lieu.ville.cp }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Description et infos :</th>
+                            <td colspan="3">Créé par {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Latitude :</th>
+                            <td>{{ sortie.lieu.latitude }}</td>
+                            <th scope="row">Longitude :</th>
+                            <td>{{ sortie.lieu.longitude }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-6">
+                <h3>Liste des participants inscrits :</h3>
+                <table class="table table-striped">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Pseudo</th>
+                            <th scope="col">Nom</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in sortie.participants %}
+                        <tr>
+                            <td>{{ user.nom }}</td>
+                            <td>{{ user.prenom }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

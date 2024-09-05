@@ -3,37 +3,43 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
+<div class="container-fluid mx-auto justify-content-center" style="width: 800px;">
 
-<div class="container-fluid mx-auto justify-content-center" style="width: 500px;">
+    <div class="row align-items-center">
+        <div class="col-md-4">
+            <img src="{{ user.photo }}" class="img-fluid rounded-circle" alt="Photo de {{ user.pseudo }}">
+        </div>
+        <div class="col-md-8">
+            <h1 class="m-5">{{ user.pseudo }}</h1>
+            <table class="table">
+                <tbody>
+                <tr>
+                    <th scope="row" style="border: none;">Prénom :</th>
+                    <td style="border: none;">{{ user.prenom }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" style="border: none;">Nom :</th>
+                    <td style="border: none;">{{ user.nom }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" style="border: none;">Téléphone :</th>
+                    <td style="border: none;">{{ user.telephone }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" style="border: none;">Email :</th>
+                    <td style="border: none;">{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" style="border: none;">Campus :</th>
+                    <td style="border: none;">{{ user.campus.nom }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-    <h1 class="m-5">{{ user.pseudo }}</h1>
-
-    <table class="table">
-        <tbody>
-        <tr class="m-2">
-            <th scope="row" style="border: none;">Prénom :</th>
-            <td style="border: none;">{{ user.prenom }}</td>
-        </tr>
-        <tr class="m-5">
-            <th scope="row" style="border: none;">Nom :</th>
-            <td style="border: none;">{{ user.nom }}</td>
-        </tr>
-        <tr class="m-2">
-            <th scope="row" style="border: none;">Téléphone :</th>
-            <td style="border: none;">{{ user.telephone }}</td>
-        </tr>
-        <tr class="m-2">
-            <th scope="row" style="border: none;">Email :</th>
-            <td style="border: none;">{{ user.email }}</td>
-        </tr>
-        <tr class="m-2">
-            <th scope="row" style="border: none;">Campus :</th>
-            <td style="border: none;">{{ user.campus.nom }}</td>
-        </tr>
-        </tbody>
-    </table>
-    <div class="col text-center">
-    <button type="button" class="btn btn-outline-info"><a href={{ url('app_sortie') }}>Retour</a></button>
+    <div class="col text-center mt-4">
+        <button type="button" class="btn btn-outline-info">Retour</button>
     </div>
 </div>
 {% endblock %}

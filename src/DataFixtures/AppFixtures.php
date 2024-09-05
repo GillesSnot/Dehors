@@ -230,6 +230,33 @@ class AppFixtures extends Fixture
         $sortieParc->setOrganisateur($user1);
         $manager->persist($sortieParc);
 
+        $sortieParc2 = new Sortie();
+        $sortieParc2->setNom('sortie Parc');
+        $sortieParc2->setCampus($campusNiort);
+        $sortieParc2->setLieu($lieuParc);
+        $sortieParc2->setDateSortie(new DateTime('+10 days'));
+        $sortieParc2->setDateFinInscription(new DateTime('+5 days'));
+        $sortieParc2->setNombrePlace(10);
+        $sortieParc2->setDuree(90);
+        $sortieParc2->setDescription('go parc');
+        $sortieParc2->setAnnulation(false);
+        $sortieParc2->setPubliee(false);
+        $sortieParc2->setOrganisateur($user2);
+        $manager->persist($sortieParc2);
+
+        $sortieParc3 = new Sortie();
+        $sortieParc3->setNom('sortie Parc');
+        $sortieParc3->setCampus($campusNiort);
+        $sortieParc3->setLieu($lieuParc);
+        $sortieParc3->setDateSortie(new DateTime('+10 days'));
+        $sortieParc3->setDateFinInscription(new DateTime('+5 days'));
+        $sortieParc3->setNombrePlace(10);
+        $sortieParc3->setDuree(90);
+        $sortieParc3->setDescription('go parc');
+        $sortieParc3->setAnnulation(false);
+        $sortieParc3->setPubliee(false);
+        $sortieParc3->setOrganisateur($user1);
+        $manager->persist($sortieParc3);
 
         $manager->flush();
     }

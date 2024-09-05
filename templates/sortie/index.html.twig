@@ -3,45 +3,175 @@
 
 {% block body %}
 
+    <div class="w-75 position-absolute top-50 start-50 translate-middle" >
 
-    {# <form>
-        <select name='select_campus'>
-            {% for campu in campus %}
-                <option></option>
-            {% endfor %}
-        </select>
-    </form> #}
-    <input type="select"></input>
+        <form id="form_search">
+            <div class="row align-items-start">
+                <div class="col">
+                    <label for='select_campus'> Campus </label>
+                    <select name='select_campus'>
+                        {% for campu in campus %}
+                            <option {% if campu.id == selectedCampusId %} selected {% endif %} value='{{campu.id}}'> {{campu.ville.nom}} </option>
+                        {% endfor %}
+                    </select> <br>
+
+                    <label for='text_recherche'> Le nom de la sortie contient </label>
+                    <input name='text_recherche' placeholder='recherche...' id='text_recherche' type="text" ></input> <br>
+
+                    <label for='date_debut'> Entre </label>
+                    <input name='date_debut' type="date" ></input>
+                    <label for='date_fin'> et </label>
+                    <input name='date_fin' type="date" ></input> <br>
+                </div>
+
+                <div class="col">
+                    <label for='chk_organisateur'>
+                        <input id="chk_organisateur" name='chk_organisateur' type="checkbox" ></input> 
+                        Sorties dont je suis l'organisateur/trice 
+                    </label><br>
+
+                    <input name='chk_inscrit' id="chk_inscrit" type="checkbox" ></input> 
+                    <label for='chk_inscrit'> Sorties auxquelles je suis inscrit/e </label> <br>
+
+                    <input name='chk_non_inscrit' id="chk_non_inscrit" type="checkbox" ></input> 
+                    <label for='chk_non_inscrit'> Sorties auxquelles je ne suis pas inscrit/e </label><br>
+
+                    <input name='chk_passees' id="chk_passees" type="checkbox" ></input>
+                    <label for='chk_passees'> Sorties passées </label><br>
+                </div>
+            </div>
+        </form>
 
 
-    <div class="w-75 h-25 position-absolute top-50 start-50 translate-middle" style="overflow-x: hidden; overflow-y: auto; height: 100px;">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                <th scope="col">Nom de la sortie</th>
-                <th scope="col">Date de la sortie</th>
-                <th scope="col">Clôture</th>
-                <th scope="col">Inscrits/Places</th>
-                <th scope="col">Etat</th>
-                <th scope="col">Inscrit</th>
-                <th scope="col">Organisateur</th>
-                <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for sortie in sorties %}
-                        <td>{{sortie.nom}}</td>
-                        <td>{{sortie.dateSortie|format_datetime()}}</td>
-                        <td>{{sortie.dateFinInscription|format_datetime()}}</td>
-                        <td>{{sortie.nombreParticipants}}/{{sortie.nombrePlace}}</td>
-                        <td>{{sortie.etat}}</td>
-                        <td>jsp encore</td>
-                        <td>{{sortie.organisateur.prenom}} {{sortie.organisateur.nom}}</td>
-                        <td>jsp encore</td>
+        <div style="overflow-x: hidden; overflow-y: auto; height:300px">
+            <table class="table table-striped text-center">
+                <thead>
+                    <tr>
+                    <th scope="col">Nom de la sortie</th>
+                    <th scope="col">Date de la sortie</th>
+                    <th scope="col">Clôture</th>
+                    <th scope="col">Inscrits/Places</th>
+                    <th scope="col">Etat</th>
+                    <th scope="col">Inscrit</th>
+                    <th scope="col">Organisateur</th>
+                    <th scope="col">Actions</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody id="tbody_sorties">
+                </tbody>
+            </table>
+        </div>
+        <a class="btn btn-dark" href="{{ path('app_register') }}">Créer une sortie</a>
     </div>
+
+
+    <script defer>
+        loadSorties()
+
+        let formSearch = document.getElementById("form_search")
+        formSearch.addEventListener('change', async event => {
+            loadSorties()
+        })
+        let textRecherche = document.getElementById("text_recherche")
+        textRecherche.addEventListener('keyup', async event => {
+            loadSorties()
+        })
+
+
+            async function loadSorties() {
+                let formSearch = document.getElementById("form_search")
+                let data = new FormData(formSearch)
+
+                let tbodySorties = document.getElementById("tbody_sorties")
+
+                try {
+                const res = await fetch(
+                    '/getSorties',
+                    {
+                    method: 'POST',
+                    body: data,
+                    },
+                );
+
+                const resData = await res.json();
+                tbodySorties.innerHTML = "" 
+                console.log(await resData);
+                for (let i in await resData) {
+                    sortie = resData[i]
+                    let tr = document.createElement("tr")
+
+                    let td = document.createElement("td")
+                    td.innerHTML = sortie.nom
+                    tr.append(td)
+                    td = document.createElement("td")
+                    td.innerHTML = sortie.dateSortie
+                    tr.append(td)
+                    td = document.createElement("td")
+                    td.innerHTML = sortie.dateFinInscritpion
+                    tr.append(td)
+                    td = document.createElement("td")
+                    td.innerHTML = sortie.inscritsPlaces
+                    tr.append(td)
+                    td = document.createElement("td")
+                    td.innerHTML = sortie.etat
+                    tr.append(td)
+                    td = document.createElement("td")
+                    td.innerHTML = sortie.inscrit ? 'X':''
+                    tr.append(td)
+                    td = document.createElement("td")
+                    let a = document.createElement("a")  
+                        a.innerHTML = sortie.organisateur
+                        a.className = 'link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover'
+                        a.href = "/profil/" + sortie.organisateurId
+                        td.append(a)
+                    tr.append(td)
+                    td = document.createElement("td") 
+
+                    a = document.createElement("a")   
+                    if (sortie.peutModifier) {
+                        a.innerHTML = 'Modifier'
+                        a.className = 'btn btn-dark btn-sm m-1'
+                        a.href = "/modifierSortie/" + sortie.id
+                    } else {
+                        a.innerHTML = 'Afficher'
+                        a.className = 'btn btn-dark btn-sm m-1'
+                        a.href = "/consulterSortie/" + sortie.id
+                    }
+                    td.append(a)
+
+                    if (sortie.peutModifier && 'En création' == sortie.etat) {
+                        a = document.createElement("a")  
+                        a.innerHTML = 'Publier'
+                        a.className = 'btn btn-dark btn-sm m-1'
+                        a.href = "/sortie/publier/" + sortie.id
+                        td.append(a)
+                    }
+
+                    if (sortie.inscrit) {
+                        a = document.createElement("a")  
+                        a.innerHTML = 'Se désister'
+                        a.className = 'btn btn-dark btn-sm m-1'
+                        a.href = "/sortie/desinscription/" + sortie.id
+                        td.append(a)
+                    } else if( 'Fermé' != sortie.etat ) {
+                        a = document.createElement("a")  
+                        a.innerHTML = 'S\'inscrire'
+                        a.className = 'btn btn-dark btn-sm m-1'
+                        a.href = "/sortie/inscription/" + sortie.id
+                        td.append(a)
+                    }
+                      
+                    tr.append(td)
+
+                    tbodySorties.append(tr)
+                    console.log(tr)
+                }
+
+                } catch (err) {
+                console.log(err.message);
+                }
+            }
+
+    </script>
 
 {% endblock %}
