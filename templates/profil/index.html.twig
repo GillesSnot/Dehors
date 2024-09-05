@@ -3,13 +3,13 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
-<div class="container-fluid mx-auto justify-content-center" style="width: 800px;">
+<div class="mx-auto justify-content-center" style="width: 800px;">
 
-    <div class="row align-items-center">
-        <div class="col-md-4">
+    <div class="row align-items-center align-center">
+        <div class="col-lg-6">
             <img src="{{ user.photo }}" class="img-fluid rounded-circle" alt="Photo de {{ user.pseudo }}">
         </div>
-        <div class="col-md-8">
+        <div class="col-lg-6 ">
             <h1 class="m-5">{{ user.pseudo }}</h1>
             <table class="table">
                 <tbody>
