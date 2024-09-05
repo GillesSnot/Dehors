@@ -48,8 +48,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private string $telephone;
 
-    #[ORM\Column(nullable: true)]
-    private ?String $photo = null;
+    #[ORM\Column(type: Types::BLOB)]
+    private $photo;
 
     #[ORM\ManyToOne(inversedBy: 'etudiants')]
     private Campus $campus;
