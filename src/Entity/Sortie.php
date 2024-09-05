@@ -221,6 +221,10 @@ class Sortie
 
     public function getEtat(): ?string
     {
+        // archivée si date de plus d'un mois
+        if (new DateTime('now') > date_add($this->getDateSortie(), date_interval_create_from_date_string(" 1 month"))) {
+            return SortieConstants::ETAT_ARCHIVEE;
+        }
 
         if (false === $this->isPubliee()) {
             return SortieConstants::ETAT_EN_CREATION;

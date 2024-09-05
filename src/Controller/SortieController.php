@@ -51,6 +51,13 @@ class SortieController extends AbstractController
 
         $sorties = $this->sortieRepo->findAll();
 
+        // filtre les sorties de plus d'un mois archivées
+        $sorties = array_filter($sorties, function(Sortie $sortie){
+            if (SortieConstants::ETAT_ARCHIVEE !== $sortie->getEtat()) {
+                return $sortie;
+            }
+        });
+
         // filtre pour n'afficher les sorties non publiées de l'utilisateur connecté
         if (isset($user)) {
             $sorties = array_filter( $sorties, function(Sortie $sortie) use ($user) {
