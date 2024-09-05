@@ -119,11 +119,15 @@
                     td.innerHTML = sortie.inscrit ? 'X':''
                     tr.append(td)
                     td = document.createElement("td")
-                    td.innerHTML = sortie.organisateur
+                    let a = document.createElement("a")  
+                        a.innerHTML = sortie.organisateur
+                        a.className = 'link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover'
+                        a.href = "/profil/" + sortie.organisateurId
+                        td.append(a)
                     tr.append(td)
                     td = document.createElement("td") 
 
-                    let a = document.createElement("a")   
+                    a = document.createElement("a")   
                     if (sortie.peutModifier) {
                         a.innerHTML = 'Modifier'
                         a.className = 'btn btn-dark btn-sm m-1'
