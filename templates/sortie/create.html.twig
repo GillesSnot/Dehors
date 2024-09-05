@@ -61,38 +61,41 @@
         {{ form_end(sortieForm) }}
 
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
+    <script defer>
+
             const lieuSelect = document.querySelector('#{{ sortieForm.lieu.vars.id }}');
             const rueContainer = document.getElementById('rueContainer');
             const latitudeContainer = document.getElementById('latitudeContainer');
             const longitudeContainer = document.getElementById('longitudeContainer');
             const codePostalContainer = document.getElementById('codePostalContainer');
+            getLieu();
 
-            lieuSelect.addEventListener('change', async function () {
-                const lieuId = this.value;
+            lieuSelect.addEventListener('change', getLieu);
 
-                if (lieuId) {
-                    try {
-                        const response = await fetch(`/get-lieu?lieuId=${lieuId}`);
-                        const data = await response.json();
+        async function getLieu() {
+           // const lieuSelect= document.querySelector('#{{ sortieForm.lieu.vars.id }}');
+            const lieuId = lieuSelect.value;
 
-                        if (data.error) {
-                            rueContainer.innerHTML = `<p class="text-danger">${data.error}</p>`;
-                        } else {
-                            rueContainer.innerHTML = `<p>Rue : ${data.rue}</p>`;
-                            latitudeContainer.innerHTML = `<p>Latitude : ${data.latitude}</p>`;
-                            longitudeContainer.innerHTML = `<p>Longitude : ${data.longitude}</p>`;
-                            codePostalContainer.innerHTML = `<p>Code postal : ${data.codePostal}</p>`;
-                        }
-                    } catch (error) {
-                        console.error('Erreur lors de la récupération du code postal:', error);
-                        rueContainer.innerHTML = `<p class="text-danger">Erreur lors de la récupération du code postal.</p>`;
+            if (lieuId) {
+                try {
+                    const response = await fetch(`/get-lieu?lieuId=${lieuId}`);
+                    const data = await response.json();
+
+                    if (data.error) {
+                        rueContainer.innerHTML = `<p class="text-danger">${data.error}</p>`;
+                    } else {
+                        rueContainer.innerHTML = `<p>Rue : ${data.rue}</p>`;
+                        latitudeContainer.innerHTML = `<p>Latitude : ${data.latitude}</p>`;
+                        longitudeContainer.innerHTML = `<p>Longitude : ${data.longitude}</p>`;
+                        codePostalContainer.innerHTML = `<p>Code postal : ${data.codePostal}</p>`;
                     }
-                } else {
-                    rueContainer.innerHTML = '';
+                } catch (error) {
+                    console.error('Erreur lors de la récupération du code postal:', error);
+                    rueContainer.innerHTML = `<p class="text-danger">Erreur lors de la récupération du code postal.</p>`;
                 }
-            });
-        });
+            } else {
+                rueContainer.innerHTML = '';
+            }
+        }
     </script>
 {% endblock %}
