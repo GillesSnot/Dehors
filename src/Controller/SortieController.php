@@ -227,15 +227,19 @@ class SortieController extends AbstractController
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $sortie->setOrganisateur($user);
 
-
             if ($sortieForm->get('enregistrer')->isClicked()) {
                 $sortie->setPubliee(false);
+                $this->addFlash('success', 'Votre sortie a bien été créée !');
             } elseif ($sortieForm->get('publier')->isClicked()) {
                 $sortie->setPubliee(true);
+                $this->addFlash('success', 'Votre sortie a bien été créée et publiée avec succès!');
+            }else {
+                $this->addFlash('error', "Votre sortie n'a été créée, il y a eu un soucis !");
             }
 
             $this->em->persist($sortie);
             $this->em->flush();
+
 
             return $this->redirectToRoute('app_sortie');
         }
