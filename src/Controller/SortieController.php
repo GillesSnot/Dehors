@@ -154,6 +154,7 @@ class SortieController extends AbstractController
                 "dateFinInscritpion" => $sortie->getDateFinInscription()->format('d-m-Y H:i:s'),
                 "inscritsPlaces" => $sortie->getNombreParticipants() . '/' . $sortie->getNombrePlace(),
                 "organisateur" => $sortie->getOrganisateur()->getPrenom() . ' ' . $sortie->getOrganisateur()->getNom(),
+                "organisateurId" => $sortie->getOrganisateur()->getId(),
                 "peutModifier" => $this->isGranted('ROLE_ADMIN') || $user === $sortie->getOrganisateur(),
                 "etat" => $sortie->getEtat(),
                 "inscrit" => $sortie->getParticipants()->contains($user),
