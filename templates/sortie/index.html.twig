@@ -125,7 +125,7 @@
                     td = document.createElement("td") 
 
                     a = document.createElement("a")   
-                    if (sortie.peutModifier) {
+                    if (sortie.peutModifier && 'Annulée' != sortie.etat) {
                         a.innerHTML = 'Modifier'
                         a.className = 'btn btn-dark btn-sm m-1'
                         a.href = "/modifierSortie/" + sortie.id
@@ -136,26 +136,27 @@
                     }
                     td.append(a)
 
-                    if (sortie.peutModifier && 'En création' == sortie.etat) {
-                        a = document.createElement("a")  
-                        a.innerHTML = 'Publier'
-                        a.className = 'btn btn-dark btn-sm m-1'
-                        a.href = "/sortie/publier/" + sortie.id
-                        td.append(a)
-                    }
-
-                    if (sortie.inscrit) {
-                        a = document.createElement("a")  
-                        a.innerHTML = 'Se désister'
-                        a.className = 'btn btn-dark btn-sm m-1'
-                        a.href = "/sortie/desinscription/" + sortie.id
-                        td.append(a)
-                    } else if( 'Fermé' != sortie.etat ) {
-                        a = document.createElement("a")  
-                        a.innerHTML = 'S\'inscrire'
-                        a.className = 'btn btn-dark btn-sm m-1'
-                        a.href = "/sortie/inscription/" + sortie.id
-                        td.append(a)
+                    if ('Annulée' != sortie.etat) {
+                        if (sortie.peutModifier && 'En création' == sortie.etat) {
+                            a = document.createElement("a")  
+                            a.innerHTML = 'Publier'
+                            a.className = 'btn btn-dark btn-sm m-1'
+                            a.href = "/sortie/publier/" + sortie.id
+                            td.append(a)
+                        }
+                        if (sortie.inscrit) {
+                            a = document.createElement("a")  
+                            a.innerHTML = 'Se désister'
+                            a.className = 'btn btn-dark btn-sm m-1'
+                            a.href = "/sortie/desinscription/" + sortie.id
+                            td.append(a)
+                        } else if( 'Fermé' != sortie.etat ) {
+                            a = document.createElement("a")  
+                            a.innerHTML = 'S\'inscrire'
+                            a.className = 'btn btn-dark btn-sm m-1'
+                            a.href = "/sortie/inscription/" + sortie.id
+                            td.append(a)
+                        }
                     }
                       
                     tr.append(td)

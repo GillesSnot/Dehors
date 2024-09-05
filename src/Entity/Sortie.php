@@ -226,6 +226,10 @@ class Sortie
             return SortieConstants::ETAT_ARCHIVEE;
         }
 
+        if ($this->isAnnulation()) {
+            return SortieConstants::ETAT_ANNULEE;
+        }
+
         if (false === $this->isPubliee()) {
             return SortieConstants::ETAT_EN_CREATION;
         }
@@ -243,7 +247,6 @@ class Sortie
                 return SortieConstants::ETAT_OUVERT;
             }
         }
-
     }
 
     public function isPubliee(): ?bool

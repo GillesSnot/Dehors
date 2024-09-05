@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+{% block title %}Annuler une sortie{% endblock %}
+
+{% block body %}
+    <h2 class="text-center mb-4">Annuler une sortie</h2>
+        {% form_theme annulationForm 'bootstrap_5_layout.html.twig' %}
+        {{ form(annulationForm) }}
+{% endblock %}
