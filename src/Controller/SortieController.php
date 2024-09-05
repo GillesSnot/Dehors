@@ -214,14 +214,19 @@ class SortieController extends AbstractController
     public function create(Request $request): Response
     {
         $user = $this->getUser();
+        $campus = $user->getCampus();
 
         $sortie = new Sortie();
-        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm = $this->createForm(SortieType::class, $sortie, [
+            'default_campus' => $campus
+        ]);
+
         $sortieForm->handleRequest($request);
+
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $sortie->setOrganisateur($user);
-            $sortie->setCampus(campus: $user->getCampus());
+
 
             if ($sortieForm->get('enregistrer')->isClicked()) {
                 $sortie->setPubliee(false);

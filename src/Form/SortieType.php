@@ -20,6 +20,8 @@ class SortieType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $defaultCampus = $options['default_campus'];
+
         $builder
             ->add('nom', TextType::class, [
                 'label'=>'Nom de la sortie :'
@@ -42,9 +44,10 @@ class SortieType extends AbstractType
                 'required' => false,
                 'label'=>'Description et infos :'
             ])
-            ->add('campus', EntityType::class, [
+            ->add('campus', EntityType::class, options: [
                 'class' => Campus::class,
                 'choice_label' => 'nom',
+                'data' => $defaultCampus,
                 'label' => 'Campus :',
             ])
             ->add('ville', EntityType::class, [
@@ -72,6 +75,7 @@ class SortieType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Sortie::class,
+            'default_campus' => null,
         ]);
     }
 }
