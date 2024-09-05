@@ -17,7 +17,7 @@ class ProfilController extends AbstractController
         private readonly UserRepository $userRepository,
     ) {}
 
-    #[Route('/profil/{id}', name: 'app_profil')]
+    #[Route('/profil/id/{id}', name: 'app_profil')]
     public function index($id): Response
     {
         $user = $this->userRepository->find($id);
@@ -28,11 +28,10 @@ class ProfilController extends AbstractController
         ]);
     }
 
-    #[Route('/profil/update', name: 'app_update_profil')]
+    #[Route('/profil/update/', name: 'app_update_profil')]
     public function update(Request $request,UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
-
         $userForm = $this->createForm(UserType::class, $user);
         $userForm->handleRequest($request);
 

@@ -46,8 +46,11 @@ security:
         # Allow access to the logout path to everyone
         - { path: ^/logout$, roles: IS_AUTHENTICATED_FULLY }
         
-        # Allow access to the logout path to everyone
+        # Allow access to the register to admin
         - { path: ^/register$, roles: ROLE_ADMIN}
+
+        # Allow access to the logout path to everyone
+        - { path: ^/generatePasswordReset$, roles: ROLE_ADMIN}
 
         # Deny access to all other paths unless the user is authenticated
         - { path: ^/, roles: [IS_AUTHENTICATED_FULLY,IS_AUTHENTICATED_REMEMBERED] }

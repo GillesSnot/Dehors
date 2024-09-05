@@ -66,6 +66,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur')]
     private Collection $sortiesOrganisees;
 
+    #[ORM\OneToOne(mappedBy: 'User', cascade: ['persist', 'remove'])]
+    private ?Token $token = null;
+
+    
+
     public function __construct()
     {
         $this->inscriptionSortie = new ArrayCollection();
@@ -276,4 +281,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getToken(): ?Token
+    {
+        return $this->token;
+    }
+
+    public function setToken(?Token $token): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($token === null && $this->token !== null) {
+            $this->token->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($token !== null && $token->getUser() !== $this) {
+            $token->setUser($this);
+        }
+
+        $this->token = $token;
+
+        return $this;
+    }
+
+   
 }
