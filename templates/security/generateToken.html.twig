@@ -1,32 +1,37 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Générate token{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/natStyle.css') }}">
+{% endblock %}
 
 {% block body %}
-    <form method="post">
-        <h1 class="h3 mb-3 font-weight-normal">Generation d'url pour reset le mdp</h1>
-        <label for="username">Pseudo</label>
-        <input type="pseudo" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="pseudo" required autofocus>
-        <input type="checkbox" name="_remember_me" checked>
-        Keep me logged in
-    </label>
-        
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
+    
+<div class="container-fluid mx-auto" style="width: 800px;"> <!-- Augmenter la largeur si nécessaire -->
+    <div class="d-flex align-items-start">        
+        <div>
+            <h1 class="mb-4">Génération de lien</h1>
 
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
-
-            <div class="checkbox mb-3">
-                <input type="checkbox" name="_remember_me" id="_remember_me">
-                <label for="_remember_me">Remember me</label>
+            {{ form_start(userForm) }}
+            <div class="mb-3">
+                {{ form_row(userForm.pseudo) }}
             </div>
-        #}
-
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
+              <button class="btn btn-lg btn-primary" type="submit">
+            Generate
         </button>
-    </form>
+            {{ form_end(userForm) }}
+            
+        </div>
+    </div>
+</div>
+  {% if url %}
+             <a href={{ url }} ></a>
+        {% endif %}
 {% endblock %}
+
+      
+
+      
+
+      
