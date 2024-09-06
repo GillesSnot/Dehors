@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+{% block title %}Importer des utilisateurs{% endblock %}
+
+{% block body %}
+    <h2 class="text-center mb-4">Importer des utilisateurs</h2>
+        {% form_theme importUserCsvForm 'bootstrap_5_layout.html.twig' %}
+        {{ form(importUserCsvForm) }}
+{% endblock %}

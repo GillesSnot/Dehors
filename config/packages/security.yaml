@@ -48,6 +48,7 @@ security:
         
         # Allow access to the register to admin
         - { path: ^/register$, roles: ROLE_ADMIN}
+        - { path: ^/admin/*, roles: ROLE_ADMIN}
         
         # Allow access to the logout path to everyone
         - { path: ^/resetPassword, roles: PUBLIC_ACCESS}

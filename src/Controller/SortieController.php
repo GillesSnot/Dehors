@@ -35,7 +35,7 @@ class SortieController extends AbstractController
         return $this->render('sortie/index.html.twig', [
             'sorties' => $this->sortieRepo->findAll(),
             'campus' => $this->campusRepo->findAll(),
-            'selectedCampusId' => $request->query->get('campusId') ?? $this->getUser()->getCampus()->getId(),
+            'selectedCampusId' => $request->query->get('campusId') ?? $this->getUser()->getCampus()?->getId(),
         ]);
     }
 
