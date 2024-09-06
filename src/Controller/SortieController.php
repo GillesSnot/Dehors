@@ -230,7 +230,7 @@ class SortieController extends AbstractController
             ($user !== $sortie->getOrganisateur()
             || SortieConstants::ETAT_ANNULEE === $sortie->getEtat()
             || new DateTime('now') > $sortie->getDateSortie())
-            || $user->getRoles() == ['ROLE_ADMIN']           
+            && !$this->isGranted('ROLE_ADMIN')
             )
         {
             return $this->redirectToRoute('app_sortie');
@@ -243,8 +243,10 @@ class SortieController extends AbstractController
             $sortie->setDescription($sortie->getDescription() . ' - ' . $annulationForm->getData()['motif']);
             $sortie->setAnnulation(true);
             $this->em->flush();
+            $this->addFlash('success', 'Vous avez bien annulé la sortie ' . $sortie->getNom());
+            return $this->redirectToRoute('app_sortie');
         }
-        $this->addFlash('success', 'Vous avez bien annulé la sortie ' . $sortie->getNom());
+        
         return $this->render('sortie/annulerSortie.html.twig', [
             'annulationForm' => $annulationForm,
         ]);
