@@ -5,10 +5,12 @@ namespace App\Entity;
 use App\Constants\SortieConstants;
 use App\Repository\SortieRepository;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
@@ -19,31 +21,32 @@ class Sortie
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nom = null;
+    private string $nom;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateSortie = null;
+    #[Assert\GreaterThan('today UTC', message: "La date de sortie doit être postérieure à la date d'aujourdhui")]
+    private DateTimeInterface $dateSortie;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $dateFinInscription = null;
+    private DateTimeInterface $dateFinInscription;
 
     #[ORM\Column]
-    private ?int $nombrePlace = null;
+    private int $nombrePlace;
 
     #[ORM\Column]
-    private ?int $duree = null;
+    private int $duree;
 
     #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[ORM\Column]
-    private ?bool $annulation = null;
+    #[ORM\Column(options: ["default" => false])]
+    private bool $annulation = false;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
-    private ?Lieu $lieu = null;
+    private Lieu $lieu;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
-    private ?Campus $campus = null;
+    private Campus $campus;
 
     /**
      * @var Collection<int, User>
@@ -52,10 +55,10 @@ class Sortie
     private Collection $participants;
 
     #[ORM\ManyToOne(inversedBy: 'sortiesOrganisees')]
-    private ?User $organisateur = null;
+    private User $organisateur;
 
-    #[ORM\Column]
-    private ?bool $publiee = null;
+    #[ORM\Column(options: ["default" => false])]
+    private bool $publiee = false;
 
     public function __construct()
     {
@@ -79,7 +82,7 @@ class Sortie
         return $this;
     }
 
-    public function getDateSortie(): ?\DateTimeInterface
+    public function getDateSortie(): ?DateTimeInterface
     {
         return $this->dateSortie;
     }
@@ -96,7 +99,7 @@ class Sortie
         return $this->dateFinInscription;
     }
 
-    public function setDateFinInscription(\DateTimeInterface $dateFinInscription): static
+    public function setDateFinInscription(DateTimeInterface $dateFinInscription): static
     {
         $this->dateFinInscription = $dateFinInscription;
 
