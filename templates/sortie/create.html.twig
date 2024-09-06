@@ -1,79 +1,104 @@
 {% extends 'base.html.twig' %}
 {% block title %}Création d'une sortie{% endblock %}
-
+{% form_theme sortieForm 'bootstrap_5_horizontal_layout.html.twig' %}
 {% block body %}
-    <div class="container-fluid w-95 mx-auto">
+    <div class="container w-50 mx-auto">
 
-        <h1>Créer une sortie</h1>
+        <h1 class="text-center">Créer une sortie</h1>
+        <form>
+            {{ form_start(sortieForm) }}
 
-        {{ form_start(sortieForm) }}
-
-        <div class="row">
             <div class="col-sm">
-                <div class="formGroup">
-                    {{ form_row(sortieForm.nom) }}
+                <div class="form-group row">
+                    {{ form_label(sortieForm.nom) }}
+                    {{ form_widget(sortieForm.nom) }}
+                    {{ form_errors(sortieForm.nom) }}
                 </div>
-                <div class="formGroup">
-                    {{ form_row(sortieForm.dateSortie) }}
+                <div class="form-group row">
+                    {{ form_label(sortieForm.dateSortie) }}
+                    {{ form_widget(sortieForm.dateSortie) }}
+                    {{ form_errors(sortieForm.dateSortie) }}
                 </div>
-                <div class="formGroup">
-                    {{ form_row(sortieForm.dateFinInscription) }}
-                </div>
-                <div class="formGroup">
-                    {{ form_row(sortieForm.nombrePlace) }}
-                </div>
-                <div class="formGroup">
-                    {{ form_row(sortieForm.duree) }} <span>minutes</span>
-                </div>
-                <div class="formGroup">
-                    {{ form_row(sortieForm.description) }}
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="formGroup">
-                    {{ form_row(sortieForm.campus) }}
-                </div>
-                <div class="formGroup">
-                    {{ form_row(sortieForm.ville) }}
-                </div>
-                <div class="formGroup">
-                    {{ form_row(sortieForm.lieu) }}
-                </div>
-                <div>
-                    <p id="rueContainer">Rue : </p>
-                </div>
-                <div>
-                    <p id="codePostalContainer">Code postal : </p>
-                </div>
-                <div>
-                    <p id="latitudeContainer">Latitude :</p>
-                </div>
-                <div>
-                    <p id="longitudeContainer">Longitude :</p>
-                </div>
-            </div>
-            <div class="d-flex justify-content-around">
-                {{ form_row(sortieForm.enregistrer) }}
-                {{ form_row(sortieForm.publier) }}
-                <button type="button" class="btn btn-outline-info"><a style="text-decoration: none" href={{ url('app_sortie') }}>Retour</a></button>
-            </div>
-        </div>
-        {{ form_end(sortieForm) }}
+                <div class="form-group row">
+                    {{ form_label(sortieForm.dateFinInscription) }}
+                    {{ form_widget(sortieForm.dateFinInscription) }}
+                    {{ form_errors(sortieForm.dateFinInscription) }}
 
+                </div>
+                <div class="form-group row">
+                    {{ form_label(sortieForm.nombrePlace) }}
+                    {{ form_widget(sortieForm.nombrePlace) }}
+                    {{ form_errors(sortieForm.nombrePlace) }}
+
+
+                </div>
+                <div class="form-group row">
+                    {{ form_label(sortieForm.duree) }}
+                    {{ form_widget(sortieForm.duree) }}
+                    {{ form_errors(sortieForm.duree) }}
+
+                </div>
+                <div class="form-group row">
+                    {{ form_label(sortieForm.description) }}
+                    {{ form_widget(sortieForm.description) }}
+                    {{ form_errors(sortieForm.description) }}
+                </div>
+                <div class="col-sm">
+                    <div class="form-group row">
+                        {{ form_label(sortieForm.campus) }}
+                        {{ form_widget(sortieForm.campus) }}
+                        {{ form_errors(sortieForm.campus) }}
+                    </div>
+                    <div class="form-group row">
+
+                        {{ form_label(sortieForm.ville) }}
+                        {{ form_widget(sortieForm.ville) }}
+                        {{ form_errors(sortieForm.ville) }}
+
+                    </div>
+                    <div class="form-group row">
+
+                        {{ form_label(sortieForm.lieu) }}
+                        {{ form_widget(sortieForm.lieu) }}
+                        {{ form_errors(sortieForm.lieu) }}
+
+                    </div>
+                    <div>
+                        <p id="rueContainer">Rue : </p>
+                    </div>
+                    <div>
+                        <p id="codePostalContainer">Code postal : </p>
+                    </div>
+                    <div>
+                        <p id="latitudeContainer">Latitude :</p>
+                    </div>
+                    <div>
+                        <p id="longitudeContainer">Longitude :</p>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-around">
+                    {{ form_row(sortieForm.enregistrer) }}
+                    {{ form_row(sortieForm.publier) }}
+                    <button type="button" class="btn btn-outline-info">
+                        <a style="text-decoration: none" href={{ url('app_sortie') }}>Retour</a>
+                    </button>
+                </div>
+
+                {{ form_end(sortieForm) }}
+        </form>
     </div>
     <script defer>
 
-            const lieuSelect = document.querySelector('#{{ sortieForm.lieu.vars.id }}');
-            const rueContainer = document.getElementById('rueContainer');
-            const latitudeContainer = document.getElementById('latitudeContainer');
-            const longitudeContainer = document.getElementById('longitudeContainer');
-            const codePostalContainer = document.getElementById('codePostalContainer');
-            getLieu();
+        const lieuSelect = document.querySelector('#{{ sortieForm.lieu.vars.id }}');
+        const rueContainer = document.getElementById('rueContainer');
+        const latitudeContainer = document.getElementById('latitudeContainer');
+        const longitudeContainer = document.getElementById('longitudeContainer');
+        const codePostalContainer = document.getElementById('codePostalContainer');
+        getLieu();
 
-            lieuSelect.addEventListener('change', getLieu);
+        lieuSelect.addEventListener('change', getLieu);
 
         async function getLieu() {
-           // const lieuSelect= document.querySelector('#{{ sortieForm.lieu.vars.id }}');
             const lieuId = lieuSelect.value;
 
             if (lieuId) {
