@@ -74,11 +74,9 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-around">
-                    {{ form_row(sortieForm.enregistrer) }}
-                    {{ form_row(sortieForm.publier) }}
-                    <button type="button" class="btn btn-outline-info">
-                        <a style="text-decoration: none" href={{ url('app_sortie') }}>Retour</a>
-                    </button>
+                    {{ form_widget(sortieForm.enregistrer) }}
+                    {{ form_widget(sortieForm.publier) }}
+                    <a class="btn btn-outline-info" href={{ url('app_sortie') }}>Retour</a>
                 </div>
 
                 {{ form_end(sortieForm) }}
