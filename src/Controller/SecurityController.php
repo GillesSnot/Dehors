@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Token;
+use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Repository\TokenRepository;
 use App\Form\PasswordType;
@@ -54,15 +55,23 @@ class SecurityController extends AbstractController
     #[Route(path: '/generateToken', name: 'app_generate_password_reset')]
     public function generatePasswordReset(Request $request,UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
+        $user = new User();
         $userForm = $this->createForm(PseudoType::class, $user);
         $userForm->handleRequest($request);
         $url='';
 
         if($userForm->isSubmitted() && $userForm->isValid()) {
             $user= $this->userRepository->findOneBy(['pseudo'=>$userForm->get('pseudo')->getData()]);
+
+           
             $url=generateToken($length = 64);
-            $token = new Token();
+            if($this->tokenRepository->findOneBy(['User' => $user])){
+                $token=$this->tokenRepository->findOneBy(['User' => $user]);
+            }
+            else{
+                $token = new Token();
+            }
+            
             $token->setToken($url);
             $token->setUser($user);
             // Persister le token dans la base de données
@@ -94,6 +103,14 @@ class SecurityController extends AbstractController
             // Format the image SRC:  data:{mime};base64,{data};
             $entityManager->persist($user);
             $entityManager->flush();
+
+            $existingToken = $this->tokenRepository->findOneBy(['token'=>$token]);
+
+            // Si un token existe déjà, on le supprime
+            if ($existingToken) {
+                $this->entityManager->remove($existingToken);
+                $this->entityManager->flush();  // Nécessaire pour supprimer immédiatement l'ancien token
+            }
             
             return $this->redirectToRoute('app_login');
         }

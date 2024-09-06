@@ -23,7 +23,8 @@ class ProfilController extends AbstractController
         $user = $this->userRepository->find($id);
         return $this->render('profil/index.html.twig', [
             'user' => $user,
-            'controller_name' => 'ProfilController'
+            'controller_name' => 'ProfilController',
+            'photo' => stream_get_contents($user->getPhoto())
 
         ]);
     }
@@ -64,7 +65,7 @@ public function update(Request $request, UserPasswordHasherInterface $userPasswo
         // Persist and flush changes to the database
         $entityManager->persist($user);
         $entityManager->flush();
-
+        $this->addFlash('success', 'Les modifications du profil ont bien été mise à jour');
         // Redirect after successful update
         return $this->redirectToRoute('app_update_profil');
     }
