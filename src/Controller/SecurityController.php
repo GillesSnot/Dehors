@@ -7,7 +7,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Repository\TokenRepository;
 use App\Form\PasswordType;
-use App\Form\PseudoType;
+use App\Form\EmailType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,35 +56,34 @@ class SecurityController extends AbstractController
     public function generatePasswordReset(Request $request,UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
-        $userForm = $this->createForm(PseudoType::class, $user);
+        $userForm = $this->createForm(EmailType::class, $user);
         $userForm->handleRequest($request);
         $url='';
 
         if($userForm->isSubmitted() && $userForm->isValid()) {
-            $user= $this->userRepository->findOneBy(['pseudo'=>$userForm->get('pseudo')->getData()]);
+            $user= $this->userRepository->findOneBy(['email'=>$userForm->get('email')->getData()]);
 
-           
-            $url=generateToken($length = 64);
-            if($this->tokenRepository->findOneBy(['User' => $user])){
-                $token=$this->tokenRepository->findOneBy(['User' => $user]);
+           if($user){
+                $url=generateToken($length = 64);
+                if($this->tokenRepository->findOneBy(['User' => $user])){
+                    $token=$this->tokenRepository->findOneBy(['User' => $user]);
+                }
+                else{
+                    $token = new Token();
+                }
+                $token->setToken($url);
+                $token->setUser($user);
+                // Persister le token dans la base de données
+                $entityManager->persist($token);
+                $entityManager->flush();
+                return $this->redirect(getUrlOrigin().'/resetPassword/'.$url);
             }
             else{
-                $token = new Token();
+                $this->addFlash('error', 'Aucun compte existant pour l\'adresse mail : '.$userForm->get('email')->getData());
             }
-            
-            $token->setToken($url);
-            $token->setUser($user);
-            // Persister le token dans la base de données
-            $entityManager->persist($token);
-            $entityManager->flush();
-            return $this->render('security/generateToken.html.twig', [
-                'userForm' => $userForm->createView(),
-                'url'=>   getUrlOrigin().'/resetPassword/'.$url,
-            ]);
         }
         return $this->render('security/generateToken.html.twig', [
             'userForm' => $userForm->createView(),
-            'url'=>  $url,
         ]);
     }
     #[Route(path: '/resetPassword/{token}', name: 'app_reset_password')]
@@ -112,7 +111,7 @@ class SecurityController extends AbstractController
                 $this->entityManager->flush();  // Nécessaire pour supprimer immédiatement l'ancien token
             }
             
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_sortie');
         }
         return $this->render('security/resetPassword.html.twig', [
             'userForm' => $userForm->createView(),

@@ -15,19 +15,16 @@
 
             {{ form_start(userForm) }}
             <div class="mb-3">
-                {{ form_row(userForm.pseudo) }}
+                {{ form_row(userForm.email) }}
             </div>
-              <button class="btn btn-lg btn-primary" type="submit">
-            Generate
+              <button class="btn btn-dark btn-sm m-1" type="submit">
+            Reset password
         </button>
             {{ form_end(userForm) }}
             
         </div>
     </div>
 </div>
-  {% if url %}
-             <a href={{ url }} > Test </a>
-        {% endif %}
 {% endblock %}
 
       

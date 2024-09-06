@@ -69,6 +69,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'User', cascade: ['persist', 'remove'])]
     private ?Token $token = null;
 
+    #[ORM\Column]
+    private ?bool $inactif = false;
+
     
 
     public function __construct()
@@ -81,6 +84,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->id;
     }
+    
 
     public function getEmail(): ?string
     {
@@ -300,6 +304,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->token = $token;
+
+        return $this;
+    }
+
+    public function isInactif(): ?bool
+    {
+        return $this->inactif;
+    }
+
+    public function setInactif(bool $inactif): static
+    {
+        $this->inactif = $inactif;
 
         return $this;
     }
