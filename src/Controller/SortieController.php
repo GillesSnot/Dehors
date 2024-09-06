@@ -227,9 +227,10 @@ class SortieController extends AbstractController
         $user = $this->getUser();
         $sortie = $this->sortieRepo->findOneById($idSortie);
         if (
-            $user !== $sortie->getOrganisateur()
+            ($user !== $sortie->getOrganisateur()
             || SortieConstants::ETAT_ANNULEE === $sortie->getEtat()
-            || new DateTime('now') > $sortie->getDateSortie()
+            || new DateTime('now') > $sortie->getDateSortie())
+            || $user->getRoles() == ['ROLE_ADMIN']           
             )
         {
             return $this->redirectToRoute('app_sortie');
