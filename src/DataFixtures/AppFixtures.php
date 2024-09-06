@@ -180,7 +180,7 @@ class AppFixtures extends Fixture
 
         
         $sortieMediatheque = new Sortie();
-        $sortieMediatheque->setNom('sortie Mediathèque');
+        $sortieMediatheque->setNom('sortie Mediathèque123456');
         $sortieMediatheque->setCampus($campusCDB);
         $sortieMediatheque->setLieu($lieuMediatheque);
         $sortieMediatheque->setDateSortie(new DateTime('+10 days'));
@@ -190,9 +190,7 @@ class AppFixtures extends Fixture
         $sortieMediatheque->setDescription('go lire des livres');
         $sortieMediatheque->setAnnulation(false);
         $sortieMediatheque->setPubliee(true);
-        $sortieMediatheque->setOrganisateur($user1);
-        $sortieMediatheque->addParticipant($user1);
-        $sortieMediatheque->addParticipant($user2);
+        $sortieMediatheque->setOrganisateur($user3);
         $sortieMediatheque->addParticipant($user3);
         $manager->persist($sortieMediatheque);
 
