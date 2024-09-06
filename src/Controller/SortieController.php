@@ -8,7 +8,6 @@ use App\Repository\CampusRepository;
 use App\Repository\LieuRepository;
 use App\Repository\SortieRepository;
 use App\Constants\SortieConstants;
-use App\Entity\User;
 use App\Form\AnnulationSortieFormType;
 use App\Form\AnnulationSortieType;
 use App\Model\SortieListModel;
