@@ -7,7 +7,7 @@
 
     <div class="row align-items-center align-center">
         <div class="col-lg-6">
-            <img src="{{ user.photo }}" class="img-fluid rounded-circle" alt="Photo de {{ user.pseudo }}">
+            <img src="{{ photo }}" class="img-fluid rounded-circle" alt="Photo de {{ user.pseudo }}" style="width: 150px; height: 150px; object-fit: cover;">
         </div>
         <div class="col-lg-6 ">
             <h1 class="m-5">{{ user.pseudo }}</h1>
@@ -39,7 +39,7 @@
     </div>
     
     <div class="col text-center mt-4">
-        <button type="button" class="btn btn-outline-info">Retour</button>
+        <button type="button" class="btn btn-outline-info" onclick="window.location.href='{{ path('app_sortie') }}'">Retour</button>
     </div>
 </div>
 {% endblock %}
