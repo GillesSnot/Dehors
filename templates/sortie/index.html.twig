@@ -9,7 +9,7 @@
                     <label for='select_campus'> Campus </label>
                     <select name='select_campus'>
                         {% for campu in campus %}
-                            <option {% if campu.id == selectedCampusId %} selected {% endif %} value='{{campu.id}}'> {{campu.ville.nom}} </option>
+                            <option {% if campu.id == selectedCampusId %} selected {% endif %} value='{{campu.id}}'> {{campu.nom}} </option>
                         {% endfor %}
                     </select> <br>
 

@@ -33,26 +33,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
-    private string $password;
+    #[ORM\Column(nullable:true)]
+    private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    private string $pseudo;
+    private ?string $pseudo = null;
 
     #[ORM\Column(length: 255)]
-    private string $prenom;
+    private ?string $prenom = null;
 
     #[ORM\Column(length: 255)]
-    private string $nom;
+    private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
-    private string $telephone;
+    private ?string $telephone = null;
 
     #[ORM\Column(type: Types::BLOB, nullable:true)]
-    private $photo;
+    private $photo = null;
 
     #[ORM\ManyToOne(inversedBy: 'etudiants')]
-    private Campus $campus;
+    private ?Campus $campus = null;
 
     /**
      * @var Collection<int, sortie>
