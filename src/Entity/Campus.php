@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CampusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CampusRepository::class)]
@@ -21,7 +22,7 @@ class Campus
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'campus')]
     private Collection $sorties;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne()]
     private ?Ville $ville = null;
 
     /**
@@ -31,11 +32,15 @@ class Campus
     private Collection $etudiants;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        max: 40,
+        maxMessage: 'Le nom du campus ne peut dépasser 40 caractères',
+    )]
     private string $nom;
 
     public function __construct()
     {
-        $this->students = new ArrayCollection();
+        $this->etudiants = new ArrayCollection();
         $this->sorties = new ArrayCollection();
         $this->etudiants = new ArrayCollection();
     }

@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gérer les campus{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column h-100">
+        <form id="form_search" class="">
+            <div class="row align-items-start">
+                <label for='text_recherche'> Le nom contient </label>
+                <input name='text_recherche' placeholder='recherche...' id='text_recherche' type="text" ></input> <br>
+            </div>
+        </form>
+
+
+        <div style="overflow-x: auto; overflow-y: auto; flex-grow: 1; min-height: 400px" class="my-3">
+            <table class="table table-striped text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">Campus</th>
+                        <th scope="col">Ville</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody_sorties">
+                    <tr>
+                        {{ form_start(campusForm) }}
+                            <td>
+                                {{ form_row(campusForm.nom) }}
+                            </td>
+                            <td>
+                                {{ form_row(campusForm.ville) }}
+                            </td>
+                            <td>
+                                {{ form_row(campusForm.ajouter, {'attr' : {'class' : 'btn btn-dark btn-sm m-1'}} )}}
+                            </td>
+                        {{ form_end(campusForm) }}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script defer>
+        loadCampus()
+
+        let textRecherche = document.getElementById("text_recherche")
+        textRecherche.addEventListener('keyup', async event => {
+            loadCampus()
+        })
+
+
+            async function loadCampus() {
+                let formSearch = document.getElementById("form_search")
+                let data = new FormData(formSearch)
+
+                let tbodyCampus = document.getElementById("tbody_sorties")
+
+                try {
+                const res = await fetch(
+                    '/admin/getCampus',
+                    {
+                    method: 'POST',
+                    body: data,
+                    },
+                );
+
+                const resData = await res.json();
+                cleanTable()
+                console.log(await resData);
+                for (let i in await resData) {
+                    campus = resData[i]
+                    let tr = document.createElement("tr")
+                    tr.className = 'generatedTr'
+
+                    let td = document.createElement("td")
+                    td.innerHTML = campus.nom
+                    tr.append(td)
+                    td = document.createElement("td")
+                    td.innerHTML = campus.ville
+                    tr.append(td)
+                    td = document.createElement("td")
+                    let a = document.createElement("a")  
+                        a.innerHTML = 'Supprimer'
+                        a.className = 'btn btn-dark btn-sm m-1'
+                        a.href = "/admin/supprimerCampus/" + campus.id
+                        td.append(a)
+                    tr.append(td)
+                    td = document.createElement("td")
+
+                    tbodyCampus.prepend(tr)
+                    console.log(tr)
+                }
+
+                } catch (err) {
+                console.log(err.message);
+                }
+            }
+
+            function cleanTable() {
+                let generatedTrNodeList = document.querySelectorAll('.generatedTr')
+                console.log(generatedTrNodeList)
+                if (generatedTrNodeList.length != 0) {
+                    generatedTrNodeList.forEach( function (generatedTr) {
+                        generatedTr.remove()
+                    })
+                }
+            }
+
+    </script>
+
+{% endblock %}
