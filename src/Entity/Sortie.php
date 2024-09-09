@@ -21,6 +21,7 @@ class Sortie
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotNull(message: "Le nom doit être renseigné")]
     private string $nom;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -28,12 +29,15 @@ class Sortie
     private DateTimeInterface $dateSortie;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\LessThan(propertyPath: "dateSortie", message: "La limite de date d'inscription ne peut pas être postérieure à la date de sortie, voyez vous ?")]
     private DateTimeInterface $dateFinInscription;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: "Le nombre de place doit être renseigné")]
     private int $nombrePlace;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: "La durée doit être renseignée")]
     private int $duree;
 
     #[ORM\Column(length: 255)]

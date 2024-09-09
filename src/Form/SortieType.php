@@ -5,9 +5,7 @@ namespace App\Form;
 use App\Entity\Campus;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
-use App\Entity\User;
 use App\Entity\Ville;
-use DateTime;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -16,9 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use function Symfony\Component\Clock\now;
 
 class SortieType extends AbstractType
 {
@@ -37,9 +32,6 @@ class SortieType extends AbstractType
             ->add('dateFinInscription', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label'=>"Date limite d'inscription :",
-                'constraints' => [
-                    new Callback([$this, 'dateFinInscriptionValidation']),
-                ]
             ])
             ->add('nombrePlace', IntegerType::class, [
                 'label'=>'Nombre de places :'
@@ -69,25 +61,24 @@ class SortieType extends AbstractType
                 'label' => 'Lieu :',
             ])
 
-            ->add('enregistrer', SubmitType::class, [
-                'label' => 'Enregistrer',
-            ])
-            ->add('publier', SubmitType::class, [
-                'label' => 'Publier la sortie',
-                ])
-        ;
-    }
+            ->add('modifier', SubmitType::class, [
+                'attr' => ['class' => 'btn btn-outline-info'],
+                'label' => 'Modifier',
+            ]);
 
-    public function dateFinInscriptionValidation($dateFinInscription, ExecutionContextInterface $context) {
-        $form = $context->getRoot();
-        $dateSortie = $form->get('dateSortie')->getData();
+            if (!$options['is_edit']) {
+                $builder
+                    ->add('enregistrer', SubmitType::class, [
+                        'attr' => ['class' => 'btn btn-outline-info'],
+                        'label' => 'Enregistrer',
+                    ])
+                    ->add('publier', SubmitType::class, [
+                    'attr' => ['class' => 'btn btn-outline-info'],
+                    'label' => 'Publier la sortie',
+                ]);
+            }
 
-        if ($dateFinInscription > $dateSortie) {
-            // Ajoute une violation si la validation échoue
-            $context->buildViolation("La limite de date d'inscription ne peut pas être postérieure à la date de sortie, voyez vous ?")
-                ->atPath('dateFinInscription')  // Cible le champ endDate dans le formulaire
-                ->addViolation();
-        }
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -95,6 +86,8 @@ class SortieType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Sortie::class,
             'default_campus' => null,
+            'required' => false,
+            'is_edit' => false,
         ]);
     }
 }

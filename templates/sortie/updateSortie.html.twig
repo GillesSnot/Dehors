@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+{% block title %}Modification d'une sortie{% endblock %}
+{% form_theme sortieForm 'bootstrap_5_horizontal_layout.html.twig' %}
+{% block body %}
+<div class="container w-50 mx-auto pb-5">
+
+    <h1 class="text-center fs-2">Modification de la sortie {{ sortie.nom }}</h1>
+    {{ form_start(sortieForm) }}
+
+    <div class="col-sm">
+        <div class="form-group row">
+            {{ form_label(sortieForm.nom) }}
+            {{ form_widget(sortieForm.nom) }}
+            {{ form_errors(sortieForm.nom) }}
+        </div>
+        <div class="form-group row">
+            {{ form_label(sortieForm.dateSortie) }}
+            {{ form_widget(sortieForm.dateSortie) }}
+            {{ form_errors(sortieForm.dateSortie) }}
+        </div>
+        <div class="form-group row">
+            {{ form_label(sortieForm.dateFinInscription) }}
+            {{ form_widget(sortieForm.dateFinInscription) }}
+            {{ form_errors(sortieForm.dateFinInscription) }}
+
+        </div>
+        <div class="form-group row">
+            {{ form_label(sortieForm.nombrePlace) }}
+            {{ form_widget(sortieForm.nombrePlace) }}
+            {{ form_errors(sortieForm.nombrePlace) }}
+
+
+        </div>
+        <div class="form-group row">
+            {{ form_label(sortieForm.duree) }}
+            {{ form_widget(sortieForm.duree) }}
+            {{ form_errors(sortieForm.duree) }}
+
+        </div>
+        <div class="form-group row">
+            {{ form_label(sortieForm.description) }}
+            {{ form_widget(sortieForm.description) }}
+            {{ form_errors(sortieForm.description) }}
+        </div>
+        <div class="col-sm">
+            <div class="form-group row">
+                {{ form_label(sortieForm.campus) }}
+                {{ form_widget(sortieForm.campus) }}
+                {{ form_errors(sortieForm.campus) }}
+            </div>
+            <div class="form-group row">
+                {{ form_label(sortieForm.ville) }}
+                {{ form_widget(sortieForm.ville) }}
+                {{ form_errors(sortieForm.ville) }}
+            </div>
+            <div class="form-group row">
+
+                {{ form_label(sortieForm.lieu) }}
+                {{ form_widget(sortieForm.lieu) }}
+                {{ form_errors(sortieForm.lieu) }}
+
+            </div>
+            <div>
+                <p id="rueContainer">Rue : </p>
+            </div>
+            <div>
+                <p id="codePostalContainer">Code postal : </p>
+            </div>
+            <div>
+                <p id="latitudeContainer">Latitude :</p>
+            </div>
+            <div>
+                <p id="longitudeContainer">Longitude :</p>
+            </div>
+        </div>
+        <div class="d-flex justify-content-around">
+            {{ form_widget(sortieForm.modifier) }}
+            <a class="btn btn-outline-info" href={{ url('app_sortie') }}>Retour</a>
+        </div>
+    </div>
+    {{ form_end(sortieForm) }}
+</div>
+
+    <script defer>
+
+        const lieuSelect = document.querySelector('#{{ sortieForm.lieu.vars.id }}');
+        const rueContainer = document.getElementById('rueContainer');
+        const latitudeContainer = document.getElementById('latitudeContainer');
+        const longitudeContainer = document.getElementById('longitudeContainer');
+        const codePostalContainer = document.getElementById('codePostalContainer');
+        getLieu();
+
+        lieuSelect.addEventListener('change', getLieu);
+
+        async function getLieu() {
+            const lieuId = lieuSelect.value;
+
+            if (lieuId) {
+                try {
+                    const response = await fetch(`/get-lieu?lieuId=${lieuId}`);
+                    const data = await response.json();
+
+                    if (data.error) {
+                        rueContainer.innerHTML = `<p class="text-danger">${data.error}</p>`;
+                    } else {
+                        rueContainer.innerHTML = `<p>Rue : ${data.rue}</p>`;
+                        latitudeContainer.innerHTML = `<p>Latitude : ${data.latitude}</p>`;
+                        longitudeContainer.innerHTML = `<p>Longitude : ${data.longitude}</p>`;
+                        codePostalContainer.innerHTML = `<p>Code postal : ${data.codePostal}</p>`;
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la récupération du code postal:', error);
+                    rueContainer.innerHTML = `<p class="text-danger">Erreur lors de la récupération du code postal.</p>`;
+                }
+            } else {
+                rueContainer.innerHTML = '';
+            }
+        }
+    </script>
+    {% endblock %}
