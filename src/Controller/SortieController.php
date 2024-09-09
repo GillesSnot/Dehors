@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\Entity\Lieu;
 use App\Form\SortieType;
+use App\Repository\VilleRepository;
 use App\Repository\CampusRepository;
 use App\Repository\LieuRepository;
 use App\Repository\SortieRepository;
@@ -23,11 +25,11 @@ class SortieController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly SortieRepository       $sortieRepo,
-        private readonly CampusRepository       $campusRepo,
-    )
-    {
-    }
+        private readonly SortieRepository $sortieRepo,
+        private readonly CampusRepository $campusRepo,
+        private readonly LieuRepository $lieuRepository,
+        private readonly VilleRepository $villeRepository,
+    ) {}
 
     #[Route('/sortie', name: 'app_sortie')]
     #[Route('/', name: 'app_sortie_blank')]
@@ -228,10 +230,9 @@ class SortieController extends AbstractController
         $user = $this->getUser();
         $sortie = $this->sortieRepo->findOneById($idSortie);
         if (
-            ($user !== $sortie->getOrganisateur()
+            $user !== $sortie->getOrganisateur()
             || SortieConstants::ETAT_ANNULEE === $sortie->getEtat()
-            || new DateTime('now') > $sortie->getDateSortie())
-            && !$this->isGranted('ROLE_ADMIN')
+            || new DateTime('now') > $sortie->getDateSortie()
             )
         {
             return $this->redirectToRoute('app_sortie');
@@ -244,10 +245,8 @@ class SortieController extends AbstractController
             $sortie->setDescription($sortie->getDescription() . ' - ' . $annulationForm->getData()['motif']);
             $sortie->setAnnulation(true);
             $this->em->flush();
-            $this->addFlash('success', 'Vous avez bien annulé la sortie ' . $sortie->getNom());
-            return $this->redirectToRoute('app_sortie');
         }
-        
+        $this->addFlash('success', 'Vous avez bien annulé la sortie ' . $sortie->getNom());
         return $this->render('sortie/annulerSortie.html.twig', [
             'annulationForm' => $annulationForm,
         ]);
@@ -333,5 +332,48 @@ class SortieController extends AbstractController
             'sortie' => $sortie,
             'sortieForm' => $sortieForm->createView(),
         ]);
+    }
+    
+    #[Route('/addLieu', name: 'app_add_lieu')]
+public function addLieu(Request $request, LieuRepository $lieuRepository, VilleRepository $villeRepository, EntityManagerInterface $entityManager): JsonResponse
+{
+    // Récupération des données de la requête POST
+    $ville = $request->request->get('ville');
+    $nom = $request->request->get('nom');
+    $longitude = $request->request->get('longitude');
+    $latitude = $request->request->get('latitude');
+    $rue = $request->request->get('rue');
+
+
+   
+    // Vérifier si le lieu existe déjà dans la base de données
+    $lieux = $villeRepository->findOneBy(['nom' => $ville])->getLieux();
+    $ville = $villeRepository->findOneBy(['nom' => $ville]);
+    $lieuExist = false;
+    foreach ($lieux as $lieu) {
+        if ($lieu->getNom() === $nom) {
+            $lieuExist = true;
+            break;
+        }
+    }
+    
+     if ($lieuExist) {
+         // Si le lieu existe, renvoyer un message d'erreur
+         
+         return new JsonResponse(['message' => "echec"], 400);  // Code 400 : Bad Request
+     } else {
+         // Si le lieu n'existe pas, créer un nouveau lieu
+         $lieu = new Lieu();
+         $lieu->setNom($nom);
+         $lieu->setRue($rue);
+         $lieu->setLongitude($longitude);
+         $lieu->setLatitude($latitude);
+         $lieu->setVille($ville);
+         // Sauvegarder le lieu dans la base de données
+         $entityManager->persist($lieu);
+         $entityManager->flush();
+         // Retourner une réponse JSON avec un message de succès
+         return new JsonResponse(['message' => "success"], 201);  // Code 201 : Created
+     }
     }
 }
