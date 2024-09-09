@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
-{% block title %}Création d'une sortie{% endblock %}
+{% block title %}Modification d'une sortie{% endblock %}
 {% form_theme sortieForm 'bootstrap_5_horizontal_layout.html.twig' %}
 {% block body %}
-<div class="container w-50 mx-auto">
+<div class="container w-50 mx-auto pb-5">
 
-    <h1 class="text-center">Modification de la sortie</h1>
+    <h1 class="text-center fs-2">Modification de la sortie {{ sortie.nom }}</h1>
     {{ form_start(sortieForm) }}
 
     <div class="col-sm">
@@ -74,11 +74,12 @@
             </div>
         </div>
         <div class="d-flex justify-content-around">
-            {{ form_widget(sortieForm.enregistrer) }}
+            {{ form_widget(sortieForm.modifier) }}
             <a class="btn btn-outline-info" href={{ url('app_sortie') }}>Retour</a>
         </div>
     </div>
     {{ form_end(sortieForm) }}
+</div>
 
     <script defer>
 

@@ -267,12 +267,12 @@ class SortieController extends AbstractController
 
             if ($sortieForm->get('enregistrer')->isClicked()) {
                 $sortie->setPubliee(false);
-                $this->addFlash('success', 'Votre sortie a bien été créée !');
+                $this->addFlash('success', 'La sortie ' . $sortie->getNom() . '  a bien été créée !');
             } elseif ($sortieForm->get('publier')->isClicked()) {
                 $sortie->setPubliee(true);
-                $this->addFlash('success', 'Votre sortie a bien été créée et publiée avec succès!');
+                $this->addFlash('success', 'La sortie ' . $sortie->getNom() . ' a bien été créée et publiée avec succès!');
             } else {
-                $this->addFlash('error', "Votre sortie n'a été créée, il y a eu un soucis !");
+                $this->addFlash('error', "La sortie " . $sortie->getNom() . "  n'a été créée, il y a eu un soucis !");
             }
 
             $this->em->persist($sortie);
@@ -312,21 +312,21 @@ class SortieController extends AbstractController
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
-            if ($sortieForm->get('enregistrer')->isClicked()) {
-                $this->addFlash('success', 'Votre sortie a bien été modifiée !');
+            if ($sortieForm->get('modifier')->isClicked()) {
+                $this->addFlash('success', 'La sortie ' . $sortie->getNom() . ' a bien été modifiée !');
             } else {
-                $this->addFlash('error', "Votre sortie n'a été modifiée, il y a eu un soucis !");
+                $this->addFlash('error', "La sortie " . $sortie->getNom() . " n'a été modifiée, il y a eu un soucis !");
             }
 
             $this->em->persist($sortie);
             $this->em->flush();
 
 
-            return $this->redirectToRoute('app_sortie');
+            return $this->redirectToRoute('app_consulter_sortie', ['id' => $sortie->getId()]);
         }
 
         return $this->render('sortie/updateSortie.html.twig', [
-
+            'sortie' => $sortie,
             'sortieForm' => $sortieForm->createView(),
         ]);
     }

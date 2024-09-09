@@ -61,13 +61,18 @@ class SortieType extends AbstractType
                 'label' => 'Lieu :',
             ])
 
-            ->add('enregistrer', SubmitType::class, [
+            ->add('modifier', SubmitType::class, [
                 'attr' => ['class' => 'btn btn-outline-info'],
-                'label' => 'Enregistrer',
+                'label' => 'Modifier',
             ]);
 
             if (!$options['is_edit']) {
-                $builder->add('publier', SubmitType::class, [
+                $builder
+                    ->add('enregistrer', SubmitType::class, [
+                        'attr' => ['class' => 'btn btn-outline-info'],
+                        'label' => 'Enregistrer',
+                    ])
+                    ->add('publier', SubmitType::class, [
                     'attr' => ['class' => 'btn btn-outline-info'],
                     'label' => 'Publier la sortie',
                 ]);
