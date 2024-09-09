@@ -157,8 +157,15 @@
                             a.href = "/sortie/inscription/" + sortie.id
                             td.append(a)
                         }
-                    }
-                      
+                        if('Passée' != sortie.etat && sortie.peutModifier){
+                            a = document.createElement("a")  
+                            a.innerHTML = 'Annuler'
+                            a.className = 'btn btn-dark btn-sm m-1'
+                            a.href = "/annulerSortie/" + sortie.id
+                            td.append(a)
+                        }
+                    } 
+                    
                     tr.append(td)
 
                     tbodySorties.append(tr)

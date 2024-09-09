@@ -47,6 +47,15 @@
             {{ form_end(userForm) }}
         </div>
     </div>
+    <div class="col text-center mt-4">
+        <button type="button" class="btn btn-outline-info"><a href={{ app.request.headers.get('referer') }}>Retour</a></button>
+    </div>
 </div>
-  
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+    document.querySelector('#user_valider').className="btn btn-dark btn-sm m-1"
+})
+</script>
 {% endblock %}
+
+

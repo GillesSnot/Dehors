@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block title %} Panel admin{% endblock %}
+
+{% block body %}
+    <h2 class="text-center mb-4"> Liste users</h2>
+    
+
+<div class="mx-auto justify-content-center" style="width: 800px;">
+
+     <div style="overflow-x: auto; overflow-y: auto; flex-grow: 1; min-height: 400px" class="my-3">
+            <table class="table table-striped text-center">
+            <thead>
+                <tr>
+                    <th scope="row" style="border: none;">Prénom :</th>
+                    <th scope="row" style="border: none;">Nom :</th>
+                    <th scope="row" style="border: none;">Téléphone :</th>
+                    <th scope="row" style="border: none;">Email :</th>
+                    <th scope="row" style="border: none;">Campus :</th>
+                    <th scope="row">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td style="border: none;">{{ user.prenom }}</td>
+                    <td style="border: none;">{{ user.nom }}</td>
+                    <td style="border: none;">{{ user.telephone }}</td>
+                    <td style="border: none;">{{ user.email }}</td>
+                    <td style="border: none;">{{ user.campus.nom }}</td>
+                    <td style="border: none;">
+                        <a class="btn btn-dark btn-sm m-1" href="{{ path('app_admin_set_descativate', { 'id': user.id }) }}">{% if user.inactif  == false %} Désactiver {% else %} Réactiver {% endif %}</a>
+                        <a class="btn btn-dark btn-sm m-1" href="{{ path('app_admin_delete_account', { 'id': user.id }) }}"> Supprimer </a>
+                    </td>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    
+    <div class="col text-center mt-4">
+        <button type="button" class="btn btn-outline-info" onclick="window.location.href='{{ path('app_sortie') }}'">Retour</button>
+    </div>
+</div>
+{% endblock %}
+
