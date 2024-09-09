@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
+
 {% block title %}Création d'une sortie{% endblock %}
 {% form_theme sortieForm 'bootstrap_5_horizontal_layout.html.twig' %}
-{% block body %}
+ {% block body %}
     <div class="container w-50 mx-auto">
 
         <h1 class="text-center">Créer une sortie</h1>
@@ -49,7 +50,7 @@
                         {{ form_widget(sortieForm.campus) }}
                         {{ form_errors(sortieForm.campus) }}
                     </div>
-                    <div class="form-group row">
+                    <div id='villeForm' class="form-group row">
 
                         {{ form_label(sortieForm.ville) }}
                         {{ form_widget(sortieForm.ville) }}
@@ -61,8 +62,9 @@
                         {{ form_label(sortieForm.lieu) }}
                         {{ form_widget(sortieForm.lieu) }}
                         {{ form_errors(sortieForm.lieu) }}
-
-                    </div>
+                        <input id="addLieu" class="btn btn-primary" name="addLieu" readonly value="Ajouter un lieu">
+                     </div>
+                    
                     <div>
                         <p id="rueContainer">Rue : </p>
                     </div>
@@ -87,7 +89,88 @@
                 {{ form_end(sortieForm) }}
         </form>
     </div>
+    <div id="form" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);background-color:white;z-index:2;border:1px solid black;padding:20px;text-align:center;">
+        <form id="formAddLieu" >
+            <h2> Ajouter un lieu <h2>              
+            <label for="nom">Nom:</label>
+            <input type="text" id="nom" name="nom" required><br><br>
+            <label for="rue">Rue:</label>
+            <input type="text" id="rue" name="rue" required><br><br>
+            <label for="latitude">Latitude:</label>
+            <input type="number" id="latitude" name="latitude" step="any" required><br><br>
+            <label for="longitude">Longitude:</label>
+            <input type="number" id="longitude" name="longitude" step="any" required><br><br>
+            <label for="annulerLieu">
+                <input id="annulerLieu"  class="btn btn-primary" readonly value="Annuler">  
+            </label>
+            <label for="validerLieu">
+                <input id="validerLieu" class="btn btn-primary" readonly value="Valider"> 
+            </label>
+        </form>             
+    </div>
     <script defer>
+        const buttonAddLieu = document.querySelector('#addLieu')
+        buttonAddLieu.addEventListener('click',function(){
+            document.querySelector('#form').style.display="block"
+        })
+        const annulerLieu = document.querySelector('#annulerLieu')
+        annulerLieu.addEventListener('click',function(){
+            document.querySelector('#form').style.display="none"
+        })
+        const validerLieu = document.querySelector('#validerLieu')
+       validerLieu.addEventListener('click', async function(){
+            var nom = document.querySelector('#nom').value;
+            var rue = document.querySelector('#rue').value;
+            var latitude = document.querySelector('#latitude').value;
+            var longitude = document.querySelector('#longitude').value;
+            var i = document.querySelector('#villeForm select').selectedIndex;
+            var ville = document.querySelectorAll('#villeForm select option')[i].textContent;
+
+            console.log(nom, rue, latitude, longitude, ville);
+
+            // Création de l'objet FormData pour encapsuler les données du formulaire
+            const formData = new FormData();
+            formData.append('nom', nom);
+            formData.append('rue', rue);
+            formData.append('latitude', latitude);
+            formData.append('longitude', longitude);
+            formData.append('ville', ville);
+
+            // Envoi de la requête POST avec les données du formulaire
+            const res = await fetch('/addLieu', {
+            method: 'POST',
+            body: formData,
+            });
+
+            // Vérification du statut HTTP
+            if (res.status == 201) {
+                addFlash('success', 'Lieu crée avec succès ');
+                document.querySelector('#form').style.display="none"
+            } else {
+                console.log('Erreur :', res.status); // Afficher le code statut en cas d'erreur
+                addFlash('danger', 'Le lieu existe déjà !');
+            }
+            
+            // Optionnel : récupérer le message si la réponse est en JSON
+            const result = await res.json();
+            console.log(result.message);
+            function addFlash(type, message) {
+            // Crée une nouvelle div pour l'alerte
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} position-absolute start-50 my-5 translate-middle`;
+            alertDiv.textContent = message;
+
+            // Ajouter l'alerte dans le DOM
+            document.querySelector('#flash').appendChild(alertDiv);
+
+            // Supprimer l'alerte après 5 secondes
+            setTimeout(function () {
+                alertDiv.remove();
+            }, 5000);
+        }
+           
+            
+       })
 
         const lieuSelect = document.querySelector('#{{ sortieForm.lieu.vars.id }}');
         const rueContainer = document.getElementById('rueContainer');
