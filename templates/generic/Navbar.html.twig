@@ -30,12 +30,18 @@
 
                 {% endif %}
             </ul>
-            <!-- Lien de déconnexion à droite -->
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
-                </li>
-            </ul>
+           <ul class="navbar-nav ms-auto" style="display: flex; align-items: center;">
+    <li class="nav-item profile-info" style="display: flex; align-items: center; margin-right: 10px;">
+        <a class="nav-link" href="{{ path('app_update_profil') }}">
+            <img src="{{ app.user.photo }}" alt="Photo de profil" class="profile-photo" style="height: 7.5vh; border-radius: 40%; margin-right: 5px;">
+        </a>
+        <a class="nav-link" href="{{ path('app_update_profil') }}" style="color: white;">{{ app.user.nom }}</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+    </li>
+</ul>
+
         </div>
     </div>
 </nav>
