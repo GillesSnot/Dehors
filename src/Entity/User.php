@@ -210,7 +210,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getPhoto()
     {
-        return $this->photo;
+        return stream_get_contents($this->photo);
     }
 
     public function setPhoto($photo): static

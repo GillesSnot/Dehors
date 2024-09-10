@@ -57,7 +57,7 @@ public function update(Request $request, UserPasswordHasherInterface $userPasswo
             // Create the full data URL with MIME type
             $mimeType = $photo->getMimeType();
             $src = 'data:' . $mimeType . ';base64,' . $base64;
-
+            
             // Set the base64 image as photo in the User entity
             $user->setPhoto($src);
         }
@@ -74,7 +74,7 @@ public function update(Request $request, UserPasswordHasherInterface $userPasswo
     return $this->render('profil/update.html.twig', [
         'userForm' => $userForm->createView(),
         'user' => $user,
-        'photo' => stream_get_contents($user->getPhoto())
+        'photo' => $user->getPhoto()
     ]);
 }
 
