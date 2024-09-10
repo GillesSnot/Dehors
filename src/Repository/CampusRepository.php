@@ -40,4 +40,16 @@ class CampusRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findAllFiltered(?string $recherche) {
+        $qb = $this->createQueryBuilder('c');
+        if (isset($recherche)) {
+            $qb->where(
+                    $qb->expr()->like('LOWER(c.nom)', 'LOWER(:recherche)')
+                )
+                ->setParameter('recherche', '%' . strtolower($recherche) . '%')
+            ;
+        }
+        return $qb->getQuery()->getResult();
+    }
 }

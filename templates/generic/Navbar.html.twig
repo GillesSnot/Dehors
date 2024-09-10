@@ -16,15 +16,16 @@
                 {# Vérification du rôle ROLE_ADMIN #}
                 {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_register') }}">Création de compte</a>
+                        <a class="nav-link" href="{{ path('app_register') }}">Ajouter un utilisateur</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_admin_import_csv') }}">Importer des utilisateurs </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_admin_list_user') }}">Dashboard user </a>
+                    </li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_gestion_campus') }}">Gérer les campus </a>
                     </li>
-
                 {% endif %}
             </ul>
            <ul class="navbar-nav ms-auto" style="display: flex; align-items: center;">
