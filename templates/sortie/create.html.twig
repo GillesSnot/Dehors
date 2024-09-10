@@ -56,7 +56,6 @@
                         {{ form_errors(sortieForm.ville) }}
                     </div>
                     <div class="form-group row">
-
                         {{ form_label(sortieForm.lieu) }}
                         {{ form_widget(sortieForm.lieu) }}
                         {{ form_errors(sortieForm.lieu) }}
@@ -105,6 +104,10 @@
         </form>             
     </div>
     <script defer>
+        getLieu()
+        var select_lieu=document.querySelector('#sortie_ville').addEventListener('change',async function(){
+            getLieu()
+        })
         const buttonAddLieu = document.querySelector('#addLieu')
         buttonAddLieu.addEventListener('click',function(){
             document.querySelector('#form').style.display="block"
@@ -173,11 +176,11 @@
         const latitudeContainer = document.getElementById('latitudeContainer');
         const longitudeContainer = document.getElementById('longitudeContainer');
         const codePostalContainer = document.getElementById('codePostalContainer');
-        getLieu();
+        getInfoLieu();
 
-        lieuSelect.addEventListener('change', getLieu);
+        lieuSelect.addEventListener('change', getInfoLieu);
 
-        async function getLieu() {
+        async function getInfoLieu() {
             const lieuId = lieuSelect.value;
 
             if (lieuId) {
@@ -200,6 +203,32 @@
             } else {
                 rueContainer.innerHTML = '';
             }
+        }
+
+
+        async function getLieu(){
+            var select_lieu =document.querySelector('#sortie_lieu') 
+            select_lieu.disabled=true
+            var select =document.querySelector('#sortie_ville') 
+            var selectedIndex = select.selectedIndex;
+            var id_ville = document.querySelectorAll('#sortie_ville option')[selectedIndex].value
+            const response = await fetch(`/getLieuFromVille/${id_ville}`);
+            const data = await response.json();
+            // console.log(data)
+            eraseOption(select_lieu)
+            addData(select_lieu,data)
+            select_lieu.disabled=false
+        }
+        function eraseOption(select){
+            select.innerHTML="";
+        }
+        function addData(select,data){
+            data.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item[0];       // L'indice 0 pour la valeur
+            option.textContent = item[1]; // L'indice 1 pour le texte
+            select.appendChild(option); // Ajoute l'option à une liste déroulante
+            });
         }
     </script>
 {% endblock %}
