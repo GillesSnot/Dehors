@@ -26,7 +26,14 @@
                     <td style="border: none;">{{ user.nom }}</td>
                     <td style="border: none;">{{ user.telephone }}</td>
                     <td style="border: none;">{{ user.email }}</td>
-                    <td style="border: none;">{{ user.campus.nom }}</td>
+                    <td style="border: none;">
+                    {% if user.campus is not null %} 
+                    {{ user.campus.nom }}
+                    {% else %}
+                        Aucun campus
+                    {% endif %}
+
+                    </td>
                     <td style="border: none;">
                         <a class="btn btn-dark btn-sm m-1" href="{{ path('app_admin_set_descativate', { 'id': user.id }) }}">{% if user.inactif  == false %} Désactiver {% else %} Réactiver {% endif %}</a>
                         <a class="btn btn-dark btn-sm m-1" href="{{ path('app_admin_delete_account', { 'id': user.id }) }}"> Supprimer </a>

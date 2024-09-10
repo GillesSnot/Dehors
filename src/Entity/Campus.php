@@ -24,9 +24,6 @@ class Campus
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'campus')]
     private Collection $sorties;
 
-    #[ORM\ManyToOne()]
-    private ?Ville $ville = null;
-
     /**
      * @var Collection<int, User>
      */
@@ -43,6 +40,9 @@ class Campus
         message: 'Le nom du campus doit commencer par "Campus".'
     )]
     private string $nom;
+
+    #[ORM\ManyToOne(inversedBy: 'campus')]
+    private ?Ville $ville = null;
 
     public function __construct()
     {
@@ -86,18 +86,6 @@ class Campus
         return $this;
     }
 
-    public function getVille(): ?Ville
-    {
-        return $this->ville;
-    }
-
-    public function setVille(?Ville $ville): static
-    {
-        $this->ville = $ville;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, User>
      */
@@ -136,6 +124,18 @@ class Campus
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getVille(): ?Ville
+    {
+        return $this->ville;
+    }
+
+    public function setVille(?Ville $ville): static
+    {
+        $this->ville = $ville;
 
         return $this;
     }

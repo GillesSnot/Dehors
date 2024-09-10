@@ -24,7 +24,10 @@ class SortieFilterType extends AbstractType
                 'required' => true,
             ])
             ->add('recherche', TextType::class, [
-                'label'=>'Le nom de la sortie contient'
+                'label'=>'Le nom de la sortie contient',
+                'attr' => array(
+                    'placeholder' => 'Recherche'
+                )
             ])
             ->add('dateDebut', DateTimeType::class, [
                 'label'=>'Entre',

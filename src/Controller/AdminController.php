@@ -4,11 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Campus;
 use App\Entity\User;
+use App\Entity\Ville;
 use App\Form\CampusFilterType;
 use App\Repository\UserRepository;
 use App\Form\CampusType;
 use App\Form\ImportUserCsvType;
+use App\Form\VillesFilterType;
+use App\Form\VilleType;
 use App\Repository\CampusRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,6 +28,7 @@ class AdminController extends AbstractController
         private readonly EntityManagerInterface $em,
         private readonly UserRepository $userRepository,
         private readonly CampusRepository $campusRepo,
+        private readonly VilleRepository $villeRepo,
     ) {}
 
     #[Route('/importUserCsv', name: 'app_admin_import_csv')]
@@ -214,5 +219,79 @@ class AdminController extends AbstractController
         $this->addFlash('success', 'Le campus a bien été supprimé');
 
         return $this->redirectToRoute('app_gestion_campus');
+    }
+
+    #[Route('/gestionVilles', name: 'app_gestion_villes')]
+    public function gestionVilles(Request $request): Response
+    {
+        $ville = new Ville();
+        $villeForm = $this->createForm(VilleType::class, $ville);
+        $villeForm->handleRequest($request);
+
+        if($villeForm->isSubmitted() && $villeForm->isValid()) {
+            $this->em->persist($ville);
+            $this->em->flush();
+            $this->addFlash('success', 'Vous avez bien créé la ville ' . $ville->getNom());
+            return $this->redirectToRoute('app_gestion_villes');
+        }
+
+        return $this->render('admin/villesList.html.twig', [
+            'villesForm' => $villeForm,
+            'villesFilterForm' => $this->createForm(VillesFilterType::class),
+        ]);
+    }
+
+    #[Route('/getVilles', name: 'app_get_villes')]
+    public function getVilles(Request $request): Response
+    {
+
+        $villesFilterType = $this->createForm(VillesFilterType::class);
+        $villesFilterType->handleRequest($request);
+
+        if($villesFilterType->isSubmitted() && $villesFilterType->isValid()) {
+
+            $villesList = $this->villeRepo->findAllFiltered(
+                $villesFilterType->getData()?->getRecherche()
+            );
+    
+            $villesList = array_map( function(Ville $ville){
+                return [
+                    "id" => $ville->getId(),
+                    "nom" => $ville->getNom(),
+                    "cp" => $ville->getCp(),
+                ];
+            }, $villesList);
+
+            return new JsonResponse($villesList);
+        }
+
+
+    }
+
+    #[Route('/supprimerVille/{idVille}', name: 'app_supprimer_ville')]
+    public function supprimerVille(int $idVille): Response
+    {
+        
+        $ville = $this->villeRepo->findOneById($idVille);
+
+        if (null === $ville) {
+            return $this->redirectToRoute('app_gestion_campus');
+        }
+
+        foreach ($ville->getLieux() as $lieu) {
+            $lieu->setVille(null);
+            $this->em->flush();
+        }
+        foreach ($ville->getCampus() as $campus) {
+            $campus->setVille(null);
+            $this->em->flush();
+        }
+
+        $this->em->remove($ville);
+        $this->em->flush();
+
+        $this->addFlash('success', 'La ville a bien été supprimée');
+
+        return $this->redirectToRoute('app_gestion_villes');
     }
 }
