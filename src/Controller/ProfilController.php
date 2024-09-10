@@ -20,11 +20,11 @@ class ProfilController extends AbstractController
     #[Route('/profil/id/{id}', name: 'app_profil')]
     public function index($id): Response
     {
-            
+        $user=$this->userRepository->find($id);
         return $this->render('profil/index.html.twig', [
             'user' => $user,
             'controller_name' => 'ProfilController',
-            'photo' => stream_get_contents($user->getPhoto())
+            'photo' => $user->getPhoto()
 
         ]);
     }
@@ -57,7 +57,7 @@ public function update(Request $request, UserPasswordHasherInterface $userPasswo
             // Create the full data URL with MIME type
             $mimeType = $photo->getMimeType();
             $src = 'data:' . $mimeType . ';base64,' . $base64;
-
+            
             // Set the base64 image as photo in the User entity
             $user->setPhoto($src);
         }
@@ -74,7 +74,7 @@ public function update(Request $request, UserPasswordHasherInterface $userPasswo
     return $this->render('profil/update.html.twig', [
         'userForm' => $userForm->createView(),
         'user' => $user,
-        'photo' => stream_get_contents($user->getPhoto())
+        'photo' => $user->getPhoto()
     ]);
 }
 

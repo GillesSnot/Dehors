@@ -3,14 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\Entity\Lieu;
 use App\Form\SortieType;
+use App\Repository\VilleRepository;
 use App\Repository\CampusRepository;
 use App\Repository\LieuRepository;
 use App\Repository\SortieRepository;
 use App\Constants\SortieConstants;
 use App\Form\AnnulationSortieFormType;
 use App\Form\AnnulationSortieType;
-use App\Model\SortieListModel;
+use App\Form\SortieFilterType;
+use App\Model\SortieActionModel;
+use App\Model\SortieListItemModel;
+use App\Security\Voter\SortieActionVoter;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,16 +23,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class SortieController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly SortieRepository       $sortieRepo,
-        private readonly CampusRepository       $campusRepo,
-    )
-    {
-    }
+        private readonly SortieRepository $sortieRepo,
+        private readonly CampusRepository $campusRepo,
+        private readonly LieuRepository $lieuRepository,
+        private readonly VilleRepository $villeRepository,
+    ) {}
 
     #[Route('/sortie', name: 'app_sortie')]
     #[Route('/', name: 'app_sortie_blank')]
@@ -37,6 +44,7 @@ class SortieController extends AbstractController
             'sorties' => $this->sortieRepo->findAll(),
             'campus' => $this->campusRepo->findAll(),
             'selectedCampusId' => $request->query->get('campusId') ?? $this->getUser()->getCampus()?->getId(),
+            'formRecherche' => $this->createForm(SortieFilterType::class),
         ]);
     }
 
@@ -50,131 +58,55 @@ class SortieController extends AbstractController
 
 
     #[Route('/getSorties', name: 'app_get_sortie')]
-    public function getSorties(Request $request): Response
+    public function getSorties(Request $request, SerializerInterface $serializer): Response
     {
 
         $user = $this->getUser();
 
-        $sorties = $this->sortieRepo->findAll();
+        $sortieFilterType = $this->createForm(SortieFilterType::class);
+        $sortieFilterType->handleRequest($request);
 
-        // filtre les sorties de plus d'un mois archivées
-        $sorties = array_filter($sorties, function (Sortie $sortie) {
-            if (SortieConstants::ETAT_ARCHIVEE !== $sortie->getEtat()) {
-                return $sortie;
-            }
-        });
+        if($sortieFilterType->isSubmitted() && $sortieFilterType->isValid()) {
 
-        // filtre pour n'afficher les sorties non publiées de l'utilisateur connecté
-        if (isset($user)) {
-            $sorties = array_filter($sorties, function (Sortie $sortie) use ($user) {
-                if (($user === $sortie->getOrganisateur() && SortieConstants::ETAT_EN_CREATION === $sortie->getEtat()) || SortieConstants::ETAT_EN_CREATION !== $sortie->getEtat()) {
-                    return $sortie;
+            $sorties = $this->sortieRepo->findAllFiltered(
+                $this->getUser(),
+                $this->isGranted('ROLE_ADMIN'),
+                $sortieFilterType->getData()->getCampus(),
+                $sortieFilterType->getData()->getRecherche(),
+                $sortieFilterType->getData()->getDateDebut(),
+                $sortieFilterType->getData()->getDateFin(),
+                $sortieFilterType->getData()->isOrganisateur(),
+                $sortieFilterType->getData()->isInscrit(),
+                $sortieFilterType->getData()->isNonInscrit(),
+                $sortieFilterType->getData()->isPassee(),
+            );
+
+            $sortiesList = array_map( function(Sortie $sortie) use($user, $serializer){
+                $sortieListItem = SortieListItemModel::getSortieListItem($sortie, $user);
+                if ($this->isGranted(SortieActionVoter::AFFICHER, $sortie)) {
+                    $sortieListItem->addAction(SortieActionModel::getSortieActionItem('Afficher', $this->generateUrl('app_consulter_sortie', ['id' => $sortie->getId(),])));
                 }
-            });
-        } else {
-            $sorties = array_filter($sorties, function (Sortie $sortie) use ($user) {
-                if (SortieConstants::ETAT_EN_CREATION !== $sortie->getEtat()) {
-                    return $sortie;
+                if ($this->isGranted(SortieActionVoter::MODIFIER, $sortie)) {
+                    $sortieListItem->addAction(SortieActionModel::getSortieActionItem('Modifier', $this->generateUrl('app_consulter_sortie', ['id' => $sortie->getId(),])));
                 }
-            });
+                if ($this->isGranted(SortieActionVoter::PUBLIER, $sortie)) {
+                    $sortieListItem->addAction(SortieActionModel::getSortieActionItem('Publier', $this->generateUrl('app_publier', ['idSortie' => $sortie->getId()])));
+                }
+                if ($this->isGranted(SortieActionVoter::ANNULER, $sortie)) {
+                    $sortieListItem->addAction(SortieActionModel::getSortieActionItem('Annuler', $this->generateUrl('app_annuler', ['idSortie' => $sortie->getId()])));
+                }
+                if ($this->isGranted(SortieActionVoter::S_INSCRIRE, $sortie)) {
+                    $sortieListItem->addAction(SortieActionModel::getSortieActionItem('S\'inscrire', $this->generateUrl('app_inscription', ['idSortie' => $sortie->getId()])));
+                }
+                if ($this->isGranted(SortieActionVoter::SE_DESINSCRIRE, $sortie)) {
+                    $sortieListItem->addAction(SortieActionModel::getSortieActionItem('Se désister', $this->generateUrl('app_desinscription', ['idSortie' => $sortie->getId()])));
+                }
+                return $sortieListItem;
+            }, $sorties);
+
+            return new Response($serializer->serialize($sortiesList, 'json'));
         }
-
-        // filtre les sorties en fonction du campus
-        $selectCampus = $request->request->get('select_campus');
-        if (!empty($selectCampus)) {
-            $sorties = array_filter($sorties, function (Sortie $sortie) use ($selectCampus) {
-                if ($sortie->getCampus()->getId() == $selectCampus) {
-                    return $sortie;
-                }
-            });
-        }
-
-        // filtre les sorties en fonction de la barre de recherche
-        $textRecherche = $request->request->get('text_recherche');
-        if (!empty($textRecherche)) {
-            $sorties = array_filter($sorties, function (Sortie $sortie) use ($textRecherche) {
-                if (str_contains(strtolower($sortie->getNom()), strtolower($textRecherche))) {
-                    return $sortie;
-                }
-            });
-        }
-
-        // filtre les sorties après la date de début donnée
-        $dateDebut = DateTime::createFromFormat("Y-m-d", $request->request->get('date_debut'));
-        if (!empty($dateDebut)) {
-            $sorties = array_filter($sorties, function (Sortie $sortie) use ($dateDebut) {
-                if ($dateDebut < $sortie->getDateSortie()) {
-                    return $sortie;
-                }
-            });
-        }
-
-        // filtre les sorties avant la date de fin donnée
-        $dateFin = DateTime::createFromFormat("Y-m-d", $request->request->get('date_fin'));
-        if (!empty($dateFin)) {
-            $sorties = array_filter($sorties, function (Sortie $sortie) use ($dateFin) {
-                if ($dateFin > $sortie->getDateSortie()) {
-                    return $sortie;
-                }
-            });
-        }
-
-        // filtre les sorties dont l'utilisateur connecté est organisateur
-        $chkOrganisateur = $request->request->get('chk_organisateur');
-        if (true == $chkOrganisateur) {
-            $sorties = array_filter($sorties, function (Sortie $sortie) use ($user) {
-                if ($user == $sortie->getOrganisateur()) {
-                    return $sortie;
-                }
-            });
-        }
-
-        // filtre les sorties auxquelles l'utilisateur connecté est inscrit
-        $chkInscrit = $request->request->get('chk_inscrit');
-        if (true == $chkInscrit) {
-            $sorties = array_filter($sorties, function (Sortie $sortie) use ($user) {
-                if ($sortie->getParticipants()->contains($user)) {
-                    return $sortie;
-                }
-            });
-        }
-
-        // filtre les sorties auxquelles l'utilisateur connecté n'est pas inscrit
-        $chkNonInscrit = $request->request->get('chk_non_inscrit');
-        if (true == $chkNonInscrit) {
-            $sorties = array_filter($sorties, function (Sortie $sortie) use ($user) {
-                if (!$sortie->getParticipants()->contains($user)) {
-                    return $sortie;
-                }
-            });
-        }
-
-        // filtre les sorties passées
-        $chkPassees = $request->request->get('chk_passees');
-        if (true == $chkPassees) {
-            $sorties = array_filter($sorties, function (Sortie $sortie) use ($user) {
-                if (SortieConstants::ETAT_PASSE === $sortie->getEtat()) {
-                    return $sortie;
-                }
-            });
-        }
-
-        $sortiesList = array_map(function (Sortie $sortie) use ($user) {
-            return [
-                "id" => $sortie->getId(),
-                "nom" => $sortie->getNom(),
-                "dateSortie" => $sortie->getDateSortie()->format('d-m-Y H:i'),
-                "dateFinInscritpion" => $sortie->getDateFinInscription()->format('d-m-Y'),
-                "inscritsPlaces" => $sortie->getNombreParticipants() . '/' . $sortie->getNombrePlace(),
-                "organisateur" => $sortie->getOrganisateur()->getPrenom() . ' ' . $sortie->getOrganisateur()->getNom(),
-                "organisateurId" => $sortie->getOrganisateur()->getId(),
-                "peutModifier" => $this->isGranted('ROLE_ADMIN') || $user === $sortie->getOrganisateur(),
-                "etat" => $sortie->getEtat(),
-                "inscrit" => $sortie->getParticipants()->contains($user),
-            ];
-        }, $sorties);
-
-        return new JsonResponse($sortiesList);
+        return new JsonResponse('erreur');
     }
 
     #[Route('/sortie/desinscription/{idSortie}', name: 'app_desinscription')]
@@ -182,7 +114,8 @@ class SortieController extends AbstractController
     {
         $user = $this->getUser();
         $sortie = $this->sortieRepo->findOneById($idSortie);
-        if ($sortie->getParticipants()->contains($user)) {
+
+        if ($this->isGranted(SortieActionVoter::SE_DESINSCRIRE, $sortie)) {
             $sortie->removeParticipant($user);
             $this->em->flush();
             $this->addFlash('success', 'Vous avez bien été désinscrit de ' . $sortie->getNom());
@@ -195,7 +128,7 @@ class SortieController extends AbstractController
     {
         $user = $this->getUser();
         $sortie = $this->sortieRepo->findOneById($idSortie);
-        if (!$sortie->getParticipants()->contains($user)) {
+        if ($this->isGranted(SortieActionVoter::S_INSCRIRE, $sortie)) {
             if ($sortie->getNombreParticipants() < $sortie->getNombrePlace()) {
                 $sortie->addParticipant($user);
                 $this->em->flush();
@@ -214,7 +147,7 @@ class SortieController extends AbstractController
     {
         $user = $this->getUser();
         $sortie = $this->sortieRepo->findOneById($idSortie);
-        if ($user === $sortie->getOrganisateur()) {
+        if ($this->isGranted(SortieActionVoter::PUBLIER, $sortie)) {
             $sortie->setPubliee(true);
             $this->em->flush();
             $this->addFlash('success', 'Vous avez bien publié la sortie ' . $sortie->getNom());
@@ -225,14 +158,8 @@ class SortieController extends AbstractController
     #[Route('/annulerSortie/{idSortie}', name: 'app_annuler')]
     public function annuler($idSortie, Request $request): Response
     {
-        $user = $this->getUser();
         $sortie = $this->sortieRepo->findOneById($idSortie);
-        if (
-            ($user !== $sortie->getOrganisateur()
-            || SortieConstants::ETAT_ANNULEE === $sortie->getEtat()
-            || new DateTime('now') > $sortie->getDateSortie())
-            && !$this->isGranted('ROLE_ADMIN')
-            )
+        if (!$this->isGranted(SortieActionVoter::ANNULER, $sortie))
         {
             return $this->redirectToRoute('app_sortie');
         }
@@ -244,10 +171,8 @@ class SortieController extends AbstractController
             $sortie->setDescription($sortie->getDescription() . ' - ' . $annulationForm->getData()['motif']);
             $sortie->setAnnulation(true);
             $this->em->flush();
-            $this->addFlash('success', 'Vous avez bien annulé la sortie ' . $sortie->getNom());
-            return $this->redirectToRoute('app_sortie');
         }
-        
+        $this->addFlash('success', 'Vous avez bien annulé la sortie ' . $sortie->getNom());
         return $this->render('sortie/annulerSortie.html.twig', [
             'annulationForm' => $annulationForm,
         ]);
@@ -333,5 +258,60 @@ class SortieController extends AbstractController
             'sortie' => $sortie,
             'sortieForm' => $sortieForm->createView(),
         ]);
+    }
+    
+    #[Route('/addLieu', name: 'app_add_lieu')]
+public function addLieu(Request $request, LieuRepository $lieuRepository, VilleRepository $villeRepository, EntityManagerInterface $entityManager): JsonResponse
+{
+    // Récupération des données de la requête POST
+    $ville = $request->request->get('ville');
+    $nom = $request->request->get('nom');
+    $longitude = $request->request->get('longitude');
+    $latitude = $request->request->get('latitude');
+    $rue = $request->request->get('rue');
+
+
+   
+    // Vérifier si le lieu existe déjà dans la base de données
+    $lieux = $villeRepository->findOneBy(['nom' => $ville])->getLieux();
+    $ville = $villeRepository->findOneBy(['nom' => $ville]);
+    $lieuExist = false;
+    foreach ($lieux as $lieu) {
+        if ($lieu->getNom() === $nom) {
+            $lieuExist = true;
+            break;
+        }
+    }
+    
+     if ($lieuExist) {
+         // Si le lieu existe, renvoyer un message d'erreur
+         
+         return new JsonResponse(['message' => "echec"], 400);  // Code 400 : Bad Request
+     } else {
+         // Si le lieu n'existe pas, créer un nouveau lieu
+         $lieu = new Lieu();
+         $lieu->setNom($nom);
+         $lieu->setRue($rue);
+         $lieu->setLongitude($longitude);
+         $lieu->setLatitude($latitude);
+         $lieu->setVille($ville);
+         // Sauvegarder le lieu dans la base de données
+         $entityManager->persist($lieu);
+         $entityManager->flush();
+         // Retourner une réponse JSON avec un message de succès
+         return new JsonResponse(['message' => "success"], 201);  // Code 201 : Created
+     }
+    }
+
+
+    #[Route('/getLieuFromVille/{id}', name: 'app_get_lieu_from_ville', methods: ['GET'])]
+    public function getLieuFromVille($id,Request $request): JsonResponse
+    {
+        $tabLieu=[];
+        $ville=$this->villeRepository->find($id)->getLieux();
+        foreach ($ville as $value){
+            $tabLieu[]=[$value->getId(),$value->getNom()];
+        }
+        return new JsonResponse($tabLieu);
     }
 }

@@ -33,6 +33,11 @@ class AppFixtures extends Fixture
         $nantes->setCp('44000');
         $manager->persist($nantes);
 
+        $saintAmandMontrond = new Ville();
+        $saintAmandMontrond->setNom('Saint-Amand-Montrond');
+        $saintAmandMontrond->setCp('18210');
+        $manager->persist($saintAmandMontrond);
+
 
 
         $campusCDB = new Campus();
@@ -253,7 +258,7 @@ class AppFixtures extends Fixture
         $sortieParc2->setOrganisateur($user2);
         $manager->persist($sortieParc2);
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 200; $i++) {
             $sortieParc3 = new Sortie();
             $sortieParc3->setNom('sortie Parc');
             $sortieParc3->setCampus($campusNiort);

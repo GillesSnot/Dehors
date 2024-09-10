@@ -3,42 +3,29 @@
 
 {% block body %}
     <div class="d-flex flex-column h-100">
-        <form id="form_search" class="">
+        {# <form id="form_search" class=""> #}
+        {{ form_start(formRecherche) }} 
             <div class="row align-items-start">
                 <div class="col">
-                    <label for='select_campus'> Campus </label>
-                    <select name='select_campus'>
-                        {% for campu in campus %}
-                            <option {% if campu.id == selectedCampusId %} selected {% endif %} value='{{campu.id}}'> {{campu.nom}} </option>
-                        {% endfor %}
-                    </select> <br>
+                    {{ form_row(formRecherche.campus) }} 
 
-                    <label for='text_recherche'> Le nom de la sortie contient </label>
-                    <input name='text_recherche' placeholder='recherche...' id='text_recherche' type="text" > <br>
+                    {{ form_row(formRecherche.recherche) }} 
 
-                    <label for='date_debut'> Entre </label>
-                    <input name='date_debut' type="date" >
-                    <label for='date_fin'> et </label>
-                    <input name='date_fin' type="date" > <br>
+                    {{ form_row(formRecherche.dateDebut) }} 
+                    {{ form_row(formRecherche.dateFin) }} 
                 </div>
 
                 <div class="col">
-                    <label for='chk_organisateur'>
-                        <input id="chk_organisateur" name='chk_organisateur' type="checkbox" >
-                        Sorties dont je suis l'organisateur/trice 
-                    </label><br>
+                    {{ form_row(formRecherche.organisateur) }} 
 
-                    <input name='chk_inscrit' id="chk_inscrit" type="checkbox" >
-                    <label for='chk_inscrit'> Sorties auxquelles je suis inscrit/e </label> <br>
+                    {{ form_row(formRecherche.inscrit) }} 
 
-                    <input name='chk_non_inscrit' id="chk_non_inscrit" type="checkbox" >
-                    <label for='chk_non_inscrit'> Sorties auxquelles je ne suis pas inscrit/e </label><br>
+                    {{ form_row(formRecherche.nonInscrit) }} 
 
-                    <input name='chk_passees' id="chk_passees" type="checkbox" >
-                    <label for='chk_passees'> Sorties passées </label><br>
+                    {{ form_row(formRecherche.passee) }} 
                 </div>
             </div>
-        </form>
+        {{ form_end(formRecherche) }} 
 
 
         <div style="overflow-x: auto; overflow-y: auto; flex-grow: 1; min-height: 400px" class="my-3">
@@ -65,7 +52,7 @@
     <script defer>
         loadSorties()
 
-        let formSearch = document.getElementById("form_search")
+        let formSearch = document.getElementsByName("sortie_filter")[0]
         formSearch.addEventListener('change', async event => {
             loadSorties()
         })
@@ -76,7 +63,7 @@
 
 
             async function loadSorties() {
-                let formSearch = document.getElementById("form_search")
+                let formSearch = document.getElementsByName("sortie_filter")[0]
                 let data = new FormData(formSearch)
 
                 let tbodySorties = document.getElementById("tbody_sorties")
@@ -104,7 +91,7 @@
                     td.innerHTML = sortie.dateSortie
                     tr.append(td)
                     td = document.createElement("td")
-                    td.innerHTML = sortie.dateFinInscritpion
+                    td.innerHTML = sortie.dateFinInscription
                     tr.append(td)
                     td = document.createElement("td")
                     td.innerHTML = sortie.inscritsPlaces
@@ -124,50 +111,14 @@
                     tr.append(td)
                     td = document.createElement("td") 
 
-                    a = document.createElement("a")   
-                    if (sortie.peutModifier && 'Annulée' != sortie.etat) {
-                        a.innerHTML = 'Modifier'
+                    for (let i in sortie.actions) {
+                        a = document.createElement("a") 
+                        a.innerHTML = sortie.actions[i].nom
+                        a.href = sortie.actions[i].url
                         a.className = 'btn btn-dark btn-sm m-1'
-                        a.href = "/sortie/update/" + sortie.id
-                    } else {
-                        a.innerHTML = 'Afficher'
-                        a.className = 'btn btn-dark btn-sm m-1'
-                        a.href = "/consulterSortie/" + sortie.id
+                        td.append(a)
                     }
-                    td.append(a)
-
-                    if ('Annulée' != sortie.etat) {
-                        if (sortie.peutModifier && 'En création' == sortie.etat) {
-                            a = document.createElement("a")  
-                            a.innerHTML = 'Publier'
-                            a.className = 'btn btn-dark btn-sm m-1'
-                            a.href = "/sortie/publier/" + sortie.id
-                            td.append(a)
-                        }
-                        if (sortie.inscrit) {
-                            a = document.createElement("a")  
-                            a.innerHTML = 'Se désister'
-                            a.className = 'btn btn-dark btn-sm m-1'
-                            a.href = "/sortie/desinscription/" + sortie.id
-                            td.append(a)
-                        } else if( 'Fermé' != sortie.etat ) {
-                            a = document.createElement("a")  
-                            a.innerHTML = 'S\'inscrire'
-                            a.className = 'btn btn-dark btn-sm m-1'
-                            a.href = "/sortie/inscription/" + sortie.id
-                            td.append(a)
-                        }
-                        if('Passée' != sortie.etat && sortie.peutModifier){
-                            a = document.createElement("a")  
-                            a.innerHTML = 'Annuler'
-                            a.className = 'btn btn-dark btn-sm m-1'
-                            a.href = "/annulerSortie/" + sortie.id
-                            td.append(a)
-                        }
-                    } 
-                    
                     tr.append(td)
-
                     tbodySorties.append(tr)
                     console.log(tr)
                 }
