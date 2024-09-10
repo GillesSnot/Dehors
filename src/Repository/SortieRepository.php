@@ -65,7 +65,7 @@ class SortieRepository extends ServiceEntityRepository
 
         // filtre les sorties non publiées des autres utilisateurs si l'utilisateur n'est pas admin
         if (!$isAdmin) {
-            $qb->where(
+            $qb->andWhere(
                     $qb->expr()->orX(
                         $qb->expr()->andX(
                             's.organisateur = :user',
