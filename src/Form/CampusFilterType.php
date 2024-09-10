@@ -14,7 +14,10 @@ class CampusFilterType extends AbstractType
     {
         $builder
             ->add('recherche', TextType::class, [
-                'label'=>'Le nom contient'
+                'label'=>'Le nom contient',
+                'attr' => array(
+                    'placeholder' => 'Recherche'
+                )
             ])
         ;
     }

@@ -3,6 +3,7 @@
 
 {% block body %}
     <div class="d-flex flex-column h-100">
+        {% form_theme villesFilterForm 'bootstrap_5_horizontal_layout.html.twig' %}
         {{ form_start(villesFilterForm) }} 
             {{ form_row(villesFilterForm.recherche) }} 
         {{ form_end(villesFilterForm) }} 
@@ -19,6 +20,7 @@
                 </thead>
                 <tbody id="tbody_sorties">
                     <tr id="form_row">
+                        {% form_theme villesForm 'bootstrap_5_layout.html.twig' %}
                         {{ form_start(villesForm) }}
                             <td>
                                 {{ form_row(villesForm.nom) }}

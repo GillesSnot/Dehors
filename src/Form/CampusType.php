@@ -18,6 +18,9 @@ class CampusType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'label' => false,
+                'attr' => array(
+                    'placeholder' => 'Nom'
+                )
             ])
             ->add('ville', EntityType::class, [
                 'class' => Ville::class,

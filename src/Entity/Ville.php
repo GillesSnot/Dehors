@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\VilleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VilleRepository::class)]
@@ -19,6 +20,15 @@ class Ville
     private string $nom;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Regex(
+        pattern: '/^\d{5}$/',
+        message: 'Le code postal ne peut être composé que de numéros'
+    )]
+    #[Assert\Length(
+        max: 5,
+        min: 5,
+        exactMessage: 'Le code postal doit faire 5 caractères',
+    )]
     private string $cp;
 
     /**

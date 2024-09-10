@@ -16,9 +16,15 @@ class VilleType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'label' => false,
+                'attr' => array(
+                    'placeholder' => 'Nom'
+                )
             ])
             ->add('cp', TextType::class, [
                 'label' => false,
+                'attr' => array(
+                    'placeholder' => 'Code postal'
+                )
             ])
             ->add('ajouter', SubmitType::class)
         ;
