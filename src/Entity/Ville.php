@@ -27,9 +27,16 @@ class Ville
     #[ORM\OneToMany(targetEntity: Lieu::class, mappedBy: 'ville')]
     private Collection $Lieux;
 
+    /**
+     * @var Collection<int, Campus>
+     */
+    #[ORM\OneToMany(targetEntity: Campus::class, mappedBy: 'ville')]
+    private Collection $campus;
+
     public function __construct()
     {
         $this->Lieux = new ArrayCollection();
+        $this->campus = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -85,6 +92,36 @@ class Ville
             // set the owning side to null (unless already changed)
             if ($lieu->getVille() === $this) {
                 $lieu->setVille(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Campus>
+     */
+    public function getCampus(): Collection
+    {
+        return $this->campus;
+    }
+
+    public function addCampus(Campus $campus): static
+    {
+        if (!$this->campus->contains($campus)) {
+            $this->campus->add($campus);
+            $campus->setVille($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCampus(Campus $campus): static
+    {
+        if ($this->campus->removeElement($campus)) {
+            // set the owning side to null (unless already changed)
+            if ($campus->getVille() === $this) {
+                $campus->setVille(null);
             }
         }
 

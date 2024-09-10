@@ -40,4 +40,16 @@ class VilleRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findAllFiltered(?string $recherche) {
+        $qb = $this->createQueryBuilder('v');
+        if (isset($recherche)) {
+            $qb->where(
+                    $qb->expr()->like('LOWER(v.nom)', 'LOWER(:recherche)')
+                )
+                ->setParameter('recherche', '%' . strtolower($recherche) . '%')
+            ;
+        }
+        return $qb->getQuery()->getResult();
+    }
 }

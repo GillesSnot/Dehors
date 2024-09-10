@@ -28,7 +28,7 @@ class Lieu
     private ?float $longitude = null;
 
     #[ORM\ManyToOne(inversedBy: 'Lieux')]
-    private Ville $ville;
+    private ?Ville $ville;
 
     /**
      * @var Collection<int, Sortie>

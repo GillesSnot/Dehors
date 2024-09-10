@@ -62,10 +62,9 @@ class SortieRepository extends ServiceEntityRepository
             ->where('s.dateSortie > :dateNow')
             ->setParameter('dateNow', date_add(new DateTime('now'), date_interval_create_from_date_string(" -1 month")))
         ;
-
         // filtre les sorties non publiées des autres utilisateurs si l'utilisateur n'est pas admin
         if (!$isAdmin) {
-            $qb->where(
+            $qb->andWhere(
                     $qb->expr()->orX(
                         $qb->expr()->andX(
                             's.organisateur = :user',
