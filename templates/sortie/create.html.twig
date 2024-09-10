@@ -143,6 +143,7 @@
 
             // Vérification du statut HTTP
             if (res.status == 201) {
+                getLieu()
                 addFlash('success', 'Lieu crée avec succès ');
                 document.querySelector('#form').style.display="none"
             } else {
