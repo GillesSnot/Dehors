@@ -6,7 +6,7 @@
     <h1>Register</h1>
 
     {{ form_errors(registrationForm) }}
-
+    {% form_theme registrationForm 'bootstrap_5_layout.html.twig' %}
     {{ form_start(registrationForm) }}
         {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.pseudo) }}
@@ -19,6 +19,6 @@
             label: 'Password'
         }) }}
 
-        <button type="submit" class="btn">Register</button>
+        <button type="submit" class='btn btn-dark btn-sm m-1'>Register</button>
     {{ form_end(registrationForm) }}
 {% endblock %}
