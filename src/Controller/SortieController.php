@@ -302,4 +302,16 @@ public function addLieu(Request $request, LieuRepository $lieuRepository, VilleR
          return new JsonResponse(['message' => "success"], 201);  // Code 201 : Created
      }
     }
+
+
+    #[Route('/getLieuFromVille/{id}', name: 'app_get_lieu_from_ville', methods: ['GET'])]
+    public function getLieuFromVille($id,Request $request): JsonResponse
+    {
+        $tabLieu=[];
+        $ville=$this->villeRepository->find($id)->getLieux();
+        foreach ($ville as $value){
+            $tabLieu[]=[$value->getId(),$value->getNom()];
+        }
+        return new JsonResponse($tabLieu);
+    }
 }
