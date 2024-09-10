@@ -22,7 +22,7 @@ class CampusType extends AbstractType
             ->add('ville', EntityType::class, [
                 'class' => Ville::class,
                 'choice_label' => 'nom',
-                'label' => false
+                'label' => false,
             ])
             ->add('ajouter', SubmitType::class)
         ;

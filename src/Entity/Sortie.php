@@ -50,7 +50,7 @@ class Sortie
     private Lieu $lieu;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
-    private Campus $campus;
+    private ?Campus $campus;
 
     /**
      * @var Collection<int, User>

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Campus;
 use App\Entity\User;
+use App\Form\CampusFilterType;
 use App\Repository\UserRepository;
 use App\Form\CampusType;
 use App\Form\ImportUserCsvType;
@@ -140,6 +141,8 @@ class AdminController extends AbstractController
         $this->em->flush();
 
         return $this->redirectToRoute('app_admin_list_user');
+    }
+    
     #[Route('/gestionCampus', name: 'app_gestion_campus')]
     public function gestionCampus(Request $request): Response
     {
@@ -151,36 +154,40 @@ class AdminController extends AbstractController
             $this->em->persist($campus);
             $this->em->flush();
             $this->addFlash('success', 'Vous avez bien créé le campus ' . $campus->getNom());
+            return $this->redirectToRoute('app_gestion_campus');
         }
 
         return $this->render('admin/campusList.html.twig', [
             'campusForm' => $campusForm,
+            'campusFilterForm' => $this->createForm(CampusFilterType::class),
         ]);
     }
 
     #[Route('/getCampus', name: 'app_get_campus')]
     public function getCampus(Request $request): Response
     {
-        $campusList = $this->campusRepo->findAll();
 
-        $textRecherche = $request->request->get('text_recherche');
-        if (!empty($textRecherche)) {
-            $campusList = array_filter($campusList, function(Campus $campus) use ($textRecherche){
-                if (str_contains(strtolower($campus->getNom()), strtolower($textRecherche))) {
-                    return $campus;
-                }
-            });
+        $campusFilterType = $this->createForm(CampusFilterType::class);
+        $campusFilterType->handleRequest($request);
+
+        if($campusFilterType->isSubmitted() && $campusFilterType->isValid()) {
+
+            $campusList = $this->campusRepo->findAllFiltered(
+                $campusFilterType->getData()?->getRecherche()
+            );
+    
+            $campusList = array_map( function(Campus $campus){
+                return [
+                    "id" => $campus->getId(),
+                    "nom" => $campus->getNom(),
+                    "ville" => $campus->getVille()->getNom(),
+                ];
+            }, $campusList);
+
+            return new JsonResponse($campusList);
         }
 
-        $campusList = array_map( function(Campus $campus){
-            return [
-                "id" => $campus->getId(),
-                "nom" => $campus->getNom(),
-                "ville" => $campus->getVille()->getNom(),
-            ];
-        }, $campusList);
 
-        return new JsonResponse($campusList);
     }
 
     #[Route('/supprimerCampus/{idCampus}', name: 'app_supprimer_campus')]

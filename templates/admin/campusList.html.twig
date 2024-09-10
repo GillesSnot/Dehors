@@ -3,12 +3,9 @@
 
 {% block body %}
     <div class="d-flex flex-column h-100">
-        <form id="form_search" class="">
-            <div class="row align-items-start">
-                <label for='text_recherche'> Le nom contient </label>
-                <input name='text_recherche' placeholder='recherche...' id='text_recherche' type="text" ></input> <br>
-            </div>
-        </form>
+        {{ form_start(campusFilterForm) }} 
+            {{ form_row(campusFilterForm.recherche) }} 
+        {{ form_end(campusFilterForm) }} 
 
 
         <div style="overflow-x: auto; overflow-y: auto; flex-grow: 1; min-height: 400px" class="my-3">
@@ -21,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody id="tbody_sorties">
-                    <tr>
+                    <tr id="form_row">
                         {{ form_start(campusForm) }}
                             <td>
                                 {{ form_row(campusForm.nom) }}
@@ -42,14 +39,17 @@
     <script defer>
         loadCampus()
 
-        let textRecherche = document.getElementById("text_recherche")
-        textRecherche.addEventListener('keyup', async event => {
+        let formSearch = document.getElementsByName("campus_filter")[0]
+        let recherche = document.getElementsByName("campus_filter[recherche]")[0]
+        let formRow = document.getElementById("form_row")
+        formSearch.addEventListener('keyup', async event => {
             loadCampus()
+            
         })
 
 
             async function loadCampus() {
-                let formSearch = document.getElementById("form_search")
+                let formSearch = document.getElementsByName("campus_filter")[0]
                 let data = new FormData(formSearch)
 
                 let tbodyCampus = document.getElementById("tbody_sorties")
@@ -102,6 +102,11 @@
                     generatedTrNodeList.forEach( function (generatedTr) {
                         generatedTr.remove()
                     })
+                }
+                if(recherche.value.length == 0) {
+                    formRow.style.display = ''
+                } else {
+                    formRow.style.display = 'none'
                 }
             }
 
