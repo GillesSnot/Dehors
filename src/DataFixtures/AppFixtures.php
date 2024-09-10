@@ -10,7 +10,6 @@ use App\Entity\Ville;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Generator;
 
 class AppFixtures extends Fixture
 {
@@ -163,14 +162,14 @@ class AppFixtures extends Fixture
 
 
         $sortieParc2 = new Sortie();
-        $sortieParc2->setNom('sortie Parcfsefsgsdrhdrhdjdtjfj');
+        $sortieParc2->setNom('Sortie Jardin de la Brèche');
         $sortieParc2->setCampus($campusNiort);
         $sortieParc2->setLieu($lieuParc);
         $sortieParc2->setDateSortie(new DateTime('+10 days'));
         $sortieParc2->setDateFinInscription(new DateTime('+5 days'));
         $sortieParc2->setNombrePlace(10);
         $sortieParc2->setDuree(90);
-        $sortieParc2->setDescription('go parcParcfsefsgsdrhdrhdjdtjfj');
+        $sortieParc2->setDescription('go to le parc');
         $sortieParc2->setAnnulation(false);
         $sortieParc2->setPubliee(false);
         $sortieParc2->addParticipant($user3);
@@ -180,7 +179,7 @@ class AppFixtures extends Fixture
 
         
         $sortieMediatheque = new Sortie();
-        $sortieMediatheque->setNom('sortie Mediathèque123456');
+        $sortieMediatheque->setNom('sortie Mediathèque');
         $sortieMediatheque->setCampus($campusCDB);
         $sortieMediatheque->setLieu($lieuMediatheque);
         $sortieMediatheque->setDateSortie(new DateTime('+10 days'));
@@ -195,7 +194,7 @@ class AppFixtures extends Fixture
         $manager->persist($sortieMediatheque);
 
         $sortiePiscine = new Sortie();
-        $sortiePiscine->setNom('sortie Piscine');
+        $sortiePiscine->setNom('Sortie Piscine La Conterie');
         $sortiePiscine->setCampus($campusCDB);
         $sortiePiscine->setLieu($lieuPiscine);
         $sortiePiscine->setDateSortie(new DateTime('+10 days'));
@@ -226,7 +225,7 @@ class AppFixtures extends Fixture
         $manager->persist($sortiePiscine2);
 
         $sortieParc = new Sortie();
-        $sortieParc->setNom('Parcfsefsgsdrhdrhdjdtjfj');
+        $sortieParc->setNom('Sortie Parc des Brizeaux');
         $sortieParc->setCampus($campusNiort);
         $sortieParc->setLieu($lieuParc);
         $sortieParc->setDateSortie(new DateTime('+10 days'));
@@ -241,14 +240,14 @@ class AppFixtures extends Fixture
         $manager->persist($sortieParc);
 
         $sortieParc2 = new Sortie();
-        $sortieParc2->setNom('sortie Parc');
-        $sortieParc2->setCampus($campusNiort);
-        $sortieParc2->setLieu($lieuParc);
+        $sortieParc2->setNom('Sortie Sport');
+        $sortieParc2->setCampus($campusNantes);
+        $sortieParc2->setLieu($lieuGymnase);
         $sortieParc2->setDateSortie(new DateTime('+10 days'));
         $sortieParc2->setDateFinInscription(new DateTime('+5 days'));
         $sortieParc2->setNombrePlace(10);
         $sortieParc2->setDuree(90);
-        $sortieParc2->setDescription('go parc');
+        $sortieParc2->setDescription('go faire du cardio');
         $sortieParc2->setAnnulation(false);
         $sortieParc2->setPubliee(false);
         $sortieParc2->setOrganisateur($user2);

@@ -59,12 +59,16 @@ class SortieType extends AbstractType
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
                 'label' => 'Lieu :',
-            ])
-
-            ->add('modifier', SubmitType::class, [
-                'attr' => ['class' => 'btn btn-outline-info'],
-                'label' => 'Modifier',
             ]);
+
+            if ($options['is_edit']) {
+                $builder
+                    ->add('modifier', SubmitType::class, [
+                        'attr' => ['class' => 'btn btn-outline-info'],
+                        'label' => 'Modifier',
+                    ]);
+            }
+
 
             if (!$options['is_edit']) {
                 $builder
