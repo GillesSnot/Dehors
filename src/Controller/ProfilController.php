@@ -24,7 +24,7 @@ class ProfilController extends AbstractController
         return $this->render('profil/index.html.twig', [
             'user' => $user,
             'controller_name' => 'ProfilController',
-            'photo' => stream_get_contents($user->getPhoto())
+            'photo' => $user->getPhoto()
 
         ]);
     }
