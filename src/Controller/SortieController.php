@@ -224,7 +224,7 @@ class SortieController extends AbstractController
             $this->em->flush();
 
 
-            return $this->redirectToRoute('app_sortie');
+            return $this->redirectToRoute('app_sortie', ['campusId' => $sortie->getCampus()->getId()]);
         }
 
         return $this->render('sortie/create.html.twig', [

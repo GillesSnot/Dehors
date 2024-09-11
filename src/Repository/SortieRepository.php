@@ -119,6 +119,8 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('now', new DateTime('now'))
             ;
         }
+        $qb->orderBy('s.id', 'DESC');
+
         return $qb->getQuery()->getResult();
     }
 

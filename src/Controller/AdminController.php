@@ -62,7 +62,7 @@ class AdminController extends AbstractController
             }
             $this->em->flush();
             $this->addFlash('success', count($users) . ' utilisateurs ajoutés');
-            return $this->redirectToRoute('app_sortie');
+            return $this->redirectToRoute('app_admin_list_user');
             
         }
         return $this->render('admin/importUserCsv.html.twig', [
