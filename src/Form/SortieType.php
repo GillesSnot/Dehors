@@ -28,10 +28,12 @@ class SortieType extends AbstractType
             ->add('dateSortie', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label'=>'Date et heure de la sortie :',
+                'view_timezone' => 'Europe/Paris',
             ])
             ->add('dateFinInscription', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label'=>"Date limite d'inscription :",
+                'view_timezone' => 'Europe/Paris',
             ])
             ->add('nombrePlace', IntegerType::class, [
                 'label'=>'Nombre de places :'

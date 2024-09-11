@@ -89,6 +89,14 @@ class AppFixtures extends Fixture
         $lieuGymnase->setVille($nantes);
         $manager->persist($lieuGymnase);
 
+        $lieuCinema = new Lieu();
+        $lieuCinema->setNom('Cinema');
+        $lieuCinema->setRue('25 Avenue de Nantes');
+        $lieuCinema->setLatitude(1);
+        $lieuCinema->setLongitude(8);
+        $lieuCinema->setVille($nantes);
+        $manager->persist($lieuCinema);
+
 
 
         $userJosette = new User();
@@ -219,7 +227,7 @@ class AppFixtures extends Fixture
         $sortiePiscine2->setLieu($lieuPiscine);
         $sortiePiscine2->setDateSortie(new DateTime('+10 days'));
         $sortiePiscine2->setDateFinInscription(new DateTime('-1 days'));
-        $sortiePiscine2->setNombrePlace(1);
+        $sortiePiscine2->setNombrePlace(2);
         $sortiePiscine2->setDuree(90);
         $sortiePiscine2->setDescription('go nager');
         $sortiePiscine2->setAnnulation(false);
@@ -256,23 +264,88 @@ class AppFixtures extends Fixture
         $sortieParc2->setAnnulation(false);
         $sortieParc2->setPubliee(false);
         $sortieParc2->setOrganisateur($user2);
+        $sortieParc2->addParticipant($user2);
         $manager->persist($sortieParc2);
 
-        for ($i = 0; $i < 200; $i++) {
-            $sortieParc3 = new Sortie();
-            $sortieParc3->setNom('sortie Parc');
-            $sortieParc3->setCampus($campusNiort);
-            $sortieParc3->setLieu($lieuParc);
-            $sortieParc3->setDateSortie(new DateTime('+10 days'));
-            $sortieParc3->setDateFinInscription(new DateTime('+5 days'));
-            $sortieParc3->setNombrePlace(10);
-            $sortieParc3->setDuree(90);
-            $sortieParc3->setDescription('go parc');
-            $sortieParc3->setAnnulation(true);
-            $sortieParc3->setPubliee(false);
-            $sortieParc3->setOrganisateur($user1);
-            $manager->persist($sortieParc3);
-        }
+        $sortieCinema = new Sortie();
+        $sortieCinema->setNom('Sortie cinéma');
+        $sortieCinema->setCampus($campusNantes);
+        $sortieCinema->setLieu($lieuCinema);
+        $sortieCinema->setDateSortie(new DateTime('now'));
+        $sortieCinema->setDateFinInscription(new DateTime('-5 days'));
+        $sortieCinema->setNombrePlace(10);
+        $sortieCinema->setDuree(141);
+        $sortieCinema->setDescription('go voir un film sympa');
+        $sortieCinema->setAnnulation(false);
+        $sortieCinema->setPubliee(true);
+        $sortieCinema->setOrganisateur($userFrenegonde);
+        $sortieCinema->addParticipant($userFrenegonde);
+        $sortieCinema->addParticipant($userGeorges);
+        $manager->persist($sortieCinema);
+
+        $sortieCinema2 = new Sortie();
+        $sortieCinema2->setNom('Sortie cinéma');
+        $sortieCinema2->setCampus($campusNantes);
+        $sortieCinema2->setLieu($lieuCinema);
+        $sortieCinema2->setDateSortie(new DateTime('+2 days'));
+        $sortieCinema2->setDateFinInscription(new DateTime('-3 days'));
+        $sortieCinema2->setNombrePlace(10);
+        $sortieCinema2->setDuree(141);
+        $sortieCinema2->setDescription('go voir un film sympa');
+        $sortieCinema2->setAnnulation(false);
+        $sortieCinema2->setPubliee(true);
+        $sortieCinema2->setOrganisateur($userFrenegonde);
+        $sortieCinema2->addParticipant($userFrenegonde);
+        $sortieCinema2->addParticipant($userGeorges);
+        $manager->persist($sortieCinema2);
+
+        $sortieCinema3 = new Sortie();
+        $sortieCinema3->setNom('Sortie cinéma');
+        $sortieCinema3->setCampus($campusNantes);
+        $sortieCinema3->setLieu($lieuCinema);
+        $sortieCinema3->setDateSortie(new DateTime('+2 days'));
+        $sortieCinema3->setDateFinInscription(new DateTime('-3 days'));
+        $sortieCinema3->setNombrePlace(3);
+        $sortieCinema3->setDuree(141);
+        $sortieCinema3->setDescription('go voir un film sympa');
+        $sortieCinema3->setAnnulation(false);
+        $sortieCinema3->setPubliee(true);
+        $sortieCinema3->setOrganisateur($userFrenegonde);
+        $sortieCinema3->addParticipant($userFrenegonde);
+        $sortieCinema3->addParticipant($userGeorges);
+        $sortieCinema3->addParticipant($user1);
+        $manager->persist($sortieCinema3);
+
+        $sortieCinema4 = new Sortie();
+        $sortieCinema4->setNom('Sortie cinéma');
+        $sortieCinema4->setCampus($campusNantes);
+        $sortieCinema4->setLieu($lieuCinema);
+        $sortieCinema4->setDateSortie(new DateTime('-5 days'));
+        $sortieCinema4->setDateFinInscription(new DateTime('-10 days'));
+        $sortieCinema4->setNombrePlace(3);
+        $sortieCinema4->setDuree(141);
+        $sortieCinema4->setDescription('go voir un film sympa');
+        $sortieCinema4->setAnnulation(false);
+        $sortieCinema4->setPubliee(true);
+        $sortieCinema4->setOrganisateur($userFrenegonde);
+        $sortieCinema4->addParticipant($userFrenegonde);
+        $sortieCinema4->addParticipant($userGeorges);
+        $sortieCinema4->addParticipant($user1);
+        $manager->persist($sortieCinema4);
+
+        $sortieParc3 = new Sortie();
+        $sortieParc3->setNom('sortie Parc annulée');
+        $sortieParc3->setCampus($campusNiort);
+        $sortieParc3->setLieu($lieuParc);
+        $sortieParc3->setDateSortie(new DateTime('+10 days'));
+        $sortieParc3->setDateFinInscription(new DateTime('+5 days'));
+        $sortieParc3->setNombrePlace(10);
+        $sortieParc3->setDuree(90);
+        $sortieParc3->setDescription('go parc');
+        $sortieParc3->setAnnulation(true);
+        $sortieParc3->setPubliee(false);
+        $sortieParc3->setOrganisateur($user1);
+        $manager->persist($sortieParc3);
 
         $manager->flush();
     }
