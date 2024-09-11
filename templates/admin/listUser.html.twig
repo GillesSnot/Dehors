@@ -16,6 +16,7 @@
                     <th scope="row" style="border: none;">Téléphone :</th>
                     <th scope="row" style="border: none;">Email :</th>
                     <th scope="row" style="border: none;">Campus :</th>
+                    <th scope="row" style="border: none;">Compte désactivé </th>
                     <th scope="row">Actions</th>
                 </tr>
             </thead>
@@ -32,8 +33,10 @@
                     {% else %}
                         Aucun campus
                     {% endif %}
-
                     </td>
+                    <td style="border: none;"> {% if  user.inactif %} X {% else %}
+                        
+                    {% endif %}</td>
                     <td style="border: none;">
                         <a class="btn btn-dark btn-sm m-1" href="{{ path('app_admin_set_descativate', { 'id': user.id }) }}">{% if user.inactif  == false %} Désactiver {% else %} Réactiver {% endif %}</a>
                         <a class="btn btn-dark btn-sm m-1" href="{{ path('app_admin_delete_account', { 'id': user.id }) }}"> Supprimer </a>
