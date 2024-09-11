@@ -1,37 +1,37 @@
 {% extends 'base.html.twig' %}
-{% block title %}Gérer les campus{% endblock %}
+{% block title %}Gérer les villes{% endblock %}
 
 {% block body %}
     <div class="d-flex flex-column h-100">
-    {% form_theme campusFilterForm 'bootstrap_5_horizontal_layout.html.twig' %}
-        {{ form_start(campusFilterForm) }} 
-            {{ form_row(campusFilterForm.recherche) }} 
-        {{ form_end(campusFilterForm) }} 
+        {% form_theme villesFilterForm 'bootstrap_5_horizontal_layout.html.twig' %}
+        {{ form_start(villesFilterForm) }} 
+            {{ form_row(villesFilterForm.recherche) }} 
+        {{ form_end(villesFilterForm) }} 
 
 
         <div style="overflow-x: auto; overflow-y: auto; flex-grow: 1; min-height: 400px" class="my-3">
             <table class="table table-striped text-center">
                 <thead>
                     <tr>
-                        <th scope="col">Campus</th>
-                        <th scope="col">Ville</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Code Postal</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="tbody_sorties">
                     <tr id="form_row">
-                        {% form_theme campusForm 'bootstrap_5_layout.html.twig' %}
-                        {{ form_start(campusForm) }}
+                        {% form_theme villesForm 'bootstrap_5_layout.html.twig' %}
+                        {{ form_start(villesForm) }}
                             <td>
-                                {{ form_row(campusForm.nom) }}
+                                {{ form_row(villesForm.nom) }}
                             </td>
                             <td>
-                                {{ form_row(campusForm.ville) }}
+                                {{ form_row(villesForm.cp) }}
                             </td>
                             <td>
-                                {{ form_row(campusForm.ajouter, {'attr' : {'class' : 'btn btn-dark btn-sm m-1'}} )}}
+                                {{ form_row(villesForm.ajouter, {'attr' : {'class' : 'btn btn-dark btn-sm m-1'}} )}}
                             </td>
-                        {{ form_end(campusForm) }}
+                        {{ form_end(villesForm) }}
                     </tr>
                 </tbody>
             </table>
@@ -41,8 +41,8 @@
     <script defer>
         loadCampus()
 
-        let formSearch = document.getElementsByName("campus_filter")[0]
-        let recherche = document.getElementsByName("campus_filter[recherche]")[0]
+        let formSearch = document.getElementsByName("villes_filter")[0]
+        let recherche = document.getElementsByName("villes_filter[recherche]")[0]
         let formRow = document.getElementById("form_row")
         formSearch.addEventListener('keyup', async event => {
             loadCampus()
@@ -51,14 +51,14 @@
 
 
             async function loadCampus() {
-                let formSearch = document.getElementsByName("campus_filter")[0]
+                let formSearch = document.getElementsByName("villes_filter")[0]
                 let data = new FormData(formSearch)
 
                 let tbodyCampus = document.getElementById("tbody_sorties")
 
                 try {
                 const res = await fetch(
-                    '/admin/getCampus',
+                    '/admin/getVilles',
                     {
                     method: 'POST',
                     body: data,
@@ -69,21 +69,21 @@
                 cleanTable()
                 console.log(await resData);
                 for (let i in await resData) {
-                    campus = resData[i]
+                    ville = resData[i]
                     let tr = document.createElement("tr")
                     tr.className = 'generatedTr'
 
                     let td = document.createElement("td")
-                    td.innerHTML = campus.nom
+                    td.innerHTML = ville.nom
                     tr.append(td)
                     td = document.createElement("td")
-                    td.innerHTML = campus.ville
+                    td.innerHTML = ville.cp
                     tr.append(td)
                     td = document.createElement("td")
                     let a = document.createElement("a")  
                         a.innerHTML = 'Supprimer'
                         a.className = 'btn btn-dark btn-sm m-1'
-                        a.href = "/admin/supprimerCampus/" + campus.id
+                        a.href = "/admin/supprimerVille/" + ville.id
                         td.append(a)
                     tr.append(td)
                     td = document.createElement("td")

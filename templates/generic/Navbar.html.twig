@@ -1,8 +1,9 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style=' height: 10vh;'>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"> </script>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" >
     <div class="container-fluid">
         <!-- Image tout à gauche -->
         <a class="navbar-brand" href="#">
-            <img src="{{ asset('path/to/your/image.png') }}" alt="Logo" width="30" height="30">
+            <a class="nav-link" href="{{ path('app_sortie') }}"><img src="{{ asset('img/eni.png') }}" alt="Logo" height="75vh"></a>
         </a>
         <!-- Liens de navigation -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,6 +27,9 @@
                     </li class="nav-item">
                         <a class="nav-link" href="{{ path('app_gestion_campus') }}">Gérer les campus </a>
                     </li>
+                    </li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_gestion_villes') }}">Gérer les villes </a>
+                    </li>
                 {% endif %}
             </ul>
            <ul class="navbar-nav ms-auto" style="display: flex; align-items: center;">
@@ -33,7 +37,7 @@
         <a class="nav-link" href="{{ path('app_update_profil') }}">
             <img src="{{ app.user.photo }}" class="profile-photo" style="height: 7.5vh; border-radius: 40%; margin-right: 5px;">
         </a>
-        <a class="nav-link" href="{{ path('app_update_profil') }}" style="color: white;">{{ app.user.nom }}</a>
+        <a class="nav-link" href="{{ path('app_update_profil') }}" style="color: white;">{{ app.user.pseudo }}</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
@@ -42,4 +46,7 @@
 
         </div>
     </div>
+    </div>
 </nav>
+
+

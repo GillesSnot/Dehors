@@ -13,9 +13,9 @@
         {% endblock %}
     </head>
     <body>
-        <div class="vh-100 d-flex flex-column" id="flash">
+        <div class="vh-10 d-flex flex-column" id="flash" style=' height: 10vh;position:fixed;width:100%;top: 0px;'>
             {% if app.request.get('_route') not in ['app_login', 'app_reset_password', 'app_generate_password_reset'] %}
-                {% include 'generic/Navbar.html.twig' %}    
+                {% include 'generic/Navbar.html.twig' %}
             {% endif %}
             {% for message in app.flashes('success') %}
                 <div class="alert alert-success position-absolute start-50 my-5 translate-middle">
@@ -27,10 +27,13 @@
                     {{ message }}
                 </div>
             {% endfor %}
+            <div style="height: 10vh;width:100%;top:0px;"> </div>
             <div class="container-lg my-4" style=' height: 85vh;'>
                 {% block body %}{% endblock %}
             </div>
+            
         </div>
+        
     </body>
 
     <script>
