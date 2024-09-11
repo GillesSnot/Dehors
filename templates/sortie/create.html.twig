@@ -83,47 +83,49 @@
 
                 {{ form_end(sortieForm) }}
 
-    </div>
-    <div id="form" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);background-color:white;z-index:2;border:1px solid black;padding:20px;text-align:center;">
-        <form id="formAddLieu" >
-            <h2> Ajouter un lieu <h2>              
-            <label for="nom">Nom:</label>
-            <input type="text" id="nom" name="nom" required><br><br>
-            <label for="rue">Rue:</label>
-            <input type="text" id="rue" name="rue" required><br><br>
-            <label for="latitude">Latitude:</label>
-            <input type="number" id="latitude" name="latitude" step="any" required><br><br>
-            <label for="longitude">Longitude:</label>
-            <input type="number" id="longitude" name="longitude" step="any" required><br><br>
-            <label for="annulerLieu">
-                <input id="annulerLieu"  class="btn btn-primary" readonly value="Annuler">  
-            </label>
-            <label for="validerLieu">
-                <input id="validerLieu" class="btn btn-primary" readonly value="Valider"> 
-            </label>
-        </form>             
-    </div>
-    <script defer>
-        getLieu()
-        var select_lieu=document.querySelector('#sortie_ville').addEventListener('change',async function(){
-            getLieu()
-        })
-        const buttonAddLieu = document.querySelector('#addLieu')
-        buttonAddLieu.addEventListener('click',function(){
-            document.querySelector('#form').style.display="block"
-        })
-        const annulerLieu = document.querySelector('#annulerLieu')
-        annulerLieu.addEventListener('click',function(){
-            document.querySelector('#form').style.display="none"
-        })
-        const validerLieu = document.querySelector('#validerLieu')
-       validerLieu.addEventListener('click', async function(){
-            var nom = document.querySelector('#nom').value;
-            var rue = document.querySelector('#rue').value;
-            var latitude = document.querySelector('#latitude').value;
-            var longitude = document.querySelector('#longitude').value;
-            var i = document.querySelector('#villeForm select').selectedIndex;
-            var ville = document.querySelectorAll('#villeForm select option')[i].textContent;
+         </div>
+         <div id="form"
+              style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);background-color:white;z-index:2;border:1px solid black;padding:20px;text-align:center;">
+             <form id="formAddLieu">
+                 <h2> Ajouter un lieu </h2>
+                 <label for="nom">Nom:</label>
+                 <input type="text" id="nom" name="nom" required><br><br>
+                 <label for="rue">Rue:</label>
+                 <input type="text" id="rue" name="rue" required><br><br>
+                 <label for="latitude">Latitude:</label>
+                 <input type="number" id="latitude" name="latitude" step="any" required><br><br>
+                 <label for="longitude">Longitude:</label>
+                 <input type="number" id="longitude" name="longitude" step="any" required><br><br>
+                 <label for="annulerLieu">
+                     <input id="annulerLieu" class="btn btn-primary" readonly value="Annuler">
+                 </label>
+                 <label for="validerLieu">
+                     <input id="validerLieu" class="btn btn-primary" readonly value="Valider">
+                 </label>
+             </form>
+         </div>
+     </div>
+     <script defer>
+         getLieu()
+         var select_lieu = document.querySelector('#sortie_ville').addEventListener('change', async function () {
+             getLieu()
+         })
+         const buttonAddLieu = document.querySelector('#addLieu')
+         buttonAddLieu.addEventListener('click', function () {
+             document.querySelector('#form').style.display = "block"
+         })
+         const annulerLieu = document.querySelector('#annulerLieu')
+         annulerLieu.addEventListener('click', function () {
+             document.querySelector('#form').style.display = "none"
+         })
+         const validerLieu = document.querySelector('#validerLieu')
+         validerLieu.addEventListener('click', async function () {
+             var nom = document.querySelector('#nom').value;
+             var rue = document.querySelector('#rue').value;
+             var latitude = document.querySelector('#latitude').value;
+             var longitude = document.querySelector('#longitude').value;
+             var i = document.querySelector('#villeForm select').selectedIndex;
+             var ville = document.querySelectorAll('#villeForm select option')[i].textContent;
 
             console.log(nom, rue, latitude, longitude, ville);
 
