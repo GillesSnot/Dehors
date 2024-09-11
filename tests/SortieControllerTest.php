@@ -8,7 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SortieControllerTest extends WebTestCase
 {
-    public function testRedirectionIfNotAuthenticated() {
+    public function testRedirectionIfNotAuthenticated()
+    {
         //Création d'un navigateur simulé
         $client = static::createClient();
 
@@ -19,7 +20,9 @@ class SortieControllerTest extends WebTestCase
 
         $this->assertResponseRedirects('/login');
     }
-    public function testAffichageSortie() {
+
+    public function testAffichageSortie()
+    {
 
         //Création d'un navigateur simulé
         $client = static::createClient();
@@ -41,4 +44,32 @@ class SortieControllerTest extends WebTestCase
         $this->assertSelectorTextContains('#nomSortie', 'Sortie Jardin de la Brèche');
     }
 
+    public function testFormAjoutSortie()
+    {
+        $client = static::createClient();
+
+        $userRepository = static::getContainer()->get(UserRepository::class);
+
+        $testUser = $userRepository->find(1);
+
+        //On simule l'authentification de cet utilisateur
+        $client->loginUser($testUser);
+
+        // Aller à la page du formulaire d'ajout de sortie
+        $client->request('GET', '/sortie/create');
+
+        $this->assertResponseIsSuccessful();
+
+        $client->submitForm('Enregistrer', [
+            'sortie[nom]' => 'Mangeage de pizza',
+            'sortie[dateSortie]' => '2024-09-15 12:30:00',
+            'sortie[dateFinInscription]' => '2024-09-14 22:30:00',
+            'sortie[nombrePlace]' => '5',
+            'sortie[duree]' => '90',
+            'sortie[description]' => 'On mange des pizzas au parc quoi',
+            'sortie[campus]' => '2',
+            'sortie[ville]' => '2',
+            'sortie[lieu]' => '3',
+        ]);
+    }
 }
