@@ -101,7 +101,7 @@ class SortieController extends AbstractController
                     $sortieListItem->addAction(SortieActionModel::getSortieActionItem('Afficher', $this->generateUrl('app_consulter_sortie', ['id' => $sortie->getId(),])));
                 }
                 if ($this->isGranted(SortieActionVoter::MODIFIER, $sortie)) {
-                    $sortieListItem->addAction(SortieActionModel::getSortieActionItem('Modifier', $this->generateUrl('app_consulter_sortie', ['id' => $sortie->getId(),])));
+                    $sortieListItem->addAction(SortieActionModel::getSortieActionItem('Modifier', $this->generateUrl('app_update_sortie', ['id' => $sortie->getId(),])));
                 }
                 if ($this->isGranted(SortieActionVoter::PUBLIER, $sortie)) {
                     $sortieListItem->addAction(SortieActionModel::getSortieActionItem('Publier', $this->generateUrl('app_publier', ['idSortie' => $sortie->getId()])));
