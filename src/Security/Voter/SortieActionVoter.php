@@ -48,22 +48,50 @@ final class SortieActionVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::AFFICHER:
-                return !$this->security->isGranted('ADMIN') && $user !== $subject->getOrganisateur();
+                return (
+                    !$this->security->isGranted('ADMIN') 
+                    && $user !== $subject->getOrganisateur()
+                    ) || SortieConstants::ETAT_ANNULEE === $subject->getEtat()
+                ;
                 break;
             case self::MODIFIER:
-                return SortieConstants::ETAT_ANNULEE !== $subject->getEtat() && ($this->security->isGranted('ADMIN') || $user === $subject->getOrganisateur());
+                return 
+                    SortieConstants::ETAT_ANNULEE !== $subject->getEtat() 
+                    && (
+                    $this->security->isGranted('ADMIN') 
+                    || $user === $subject->getOrganisateur()
+                    )
+                ;
                 break;
             case self::PUBLIER:
-                return SortieConstants::ETAT_EN_CREATION === $subject->getEtat() && ($this->security->isGranted('ADMIN') || $user === $subject->getOrganisateur());
+                return 
+                    SortieConstants::ETAT_EN_CREATION === $subject->getEtat() 
+                    && (
+                        $this->security->isGranted('ADMIN') 
+                        || $user === $subject->getOrganisateur()
+                    )
+                ;
                 break;
             case self::ANNULER:
-                return SortieConstants::ETAT_ANNULEE !== $subject->getEtat() && ($this->security->isGranted('ADMIN') || $user === $subject->getOrganisateur());
+                return 
+                    SortieConstants::ETAT_ANNULEE !== $subject->getEtat() 
+                    && (
+                        $this->security->isGranted('ADMIN') 
+                        || $user === $subject->getOrganisateur()
+                    )
+                ;
                 break;
             case self::S_INSCRIRE:
-                return SortieConstants::ETAT_OUVERT === $subject->getEtat() && (!$subject->getParticipants()->contains($user));
+                return 
+                    SortieConstants::ETAT_OUVERT === $subject->getEtat() 
+                    && !$subject->getParticipants()->contains($user)
+                ;
                 break;
             case self::SE_DESINSCRIRE:
-                return SortieConstants::ETAT_OUVERT === $subject->getEtat() && ($subject->getParticipants()->contains($user));
+                return 
+                    SortieConstants::ETAT_OUVERT === $subject->getEtat() 
+                    && $subject->getParticipants()->contains($user)
+                ;
                 break;
         }
 

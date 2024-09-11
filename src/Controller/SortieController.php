@@ -40,11 +40,25 @@ class SortieController extends AbstractController
     #[Route('/', name: 'app_sortie_blank')]
     public function index(Request $request): Response
     {
+        
+
         return $this->render('sortie/index.html.twig', [
             'sorties' => $this->sortieRepo->findAll(),
             'campus' => $this->campusRepo->findAll(),
             'selectedCampusId' => $request->query->get('campusId') ?? $this->getUser()->getCampus()?->getId(),
-            'formRecherche' => $this->createForm(SortieFilterType::class),
+            'formRecherche' => $this->createForm(
+                SortieFilterType::class, 
+                null, 
+                [
+                    'campus' => null !== $request->query->get('campusId') 
+                    ? $this->campusRepo->find($request->query->get('campusId')) 
+                    : (
+                        (null !== $this->getUser()->getCampus()) 
+                        ? $this->getUser()->getCampus() 
+                        : null
+                    ),
+                ]
+            ),
         ]);
     }
 
@@ -171,6 +185,7 @@ class SortieController extends AbstractController
             $sortie->setDescription($sortie->getDescription() . ' - ' . $annulationForm->getData()['motif']);
             $sortie->setAnnulation(true);
             $this->em->flush();
+            return $this->redirectToRoute('app_sortie');
         }
         $this->addFlash('success', 'Vous avez bien annulé la sortie ' . $sortie->getNom());
         return $this->render('sortie/annulerSortie.html.twig', [

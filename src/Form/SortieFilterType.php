@@ -22,6 +22,7 @@ class SortieFilterType extends AbstractType
                 'choice_label' => 'nom',
                 'label' => 'Campus',
                 'required' => true,
+                'data' => null !== $options['campus'] ? $options['campus'] : null,
             ])
             ->add('recherche', TextType::class, [
                 'label'=>'Le nom de la sortie contient',
@@ -55,6 +56,8 @@ class SortieFilterType extends AbstractType
         $resolver->setDefaults([
             'data_class' => SortieFilterModel::class,
             'required' => false,
+            'campus' => null,
         ]);
+        $resolver->setAllowedTypes('campus', ['null', 'App\Entity\Campus']);
     }
 }
