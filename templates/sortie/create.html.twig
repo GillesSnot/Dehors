@@ -85,7 +85,7 @@
 
          </div>
          <div id="form"
-              style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);background-color:white;z-index:2;border:1px solid black;padding:20px;text-align:center;">
+              style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);background-color:white;z-index:2;border:1px solid black;padding:20px;text-align:center;z-index:10;">
              <form id="formAddLieu">
                  <h2> Ajouter un lieu </h2>
                  <label for="nom">Nom:</label>
@@ -105,6 +105,7 @@
              </form>
          </div>
      </div>
+     <div style="top:0px;left:0px;width:100%;height:100%;z-index:8;display:none;position:absolute;" id="overlay"></div>
      <script defer>
          getLieu()
          var select_lieu = document.querySelector('#sortie_ville').addEventListener('change', async function () {
@@ -113,10 +114,14 @@
          const buttonAddLieu = document.querySelector('#addLieu')
          buttonAddLieu.addEventListener('click', function () {
              document.querySelector('#form').style.display = "block"
+             document.querySelector('#overlay').style.display = "block"
+             document.body.style.overflow='hidden'
          })
          const annulerLieu = document.querySelector('#annulerLieu')
          annulerLieu.addEventListener('click', function () {
              document.querySelector('#form').style.display = "none"
+             document.querySelector('#overlay').style.display = "none"
+             document.body.style.overflow='auto'
          })
          const validerLieu = document.querySelector('#validerLieu')
          validerLieu.addEventListener('click', async function () {
@@ -148,6 +153,8 @@
                 getLieu()
                 addFlash('success', 'Lieu crée avec succès ');
                 document.querySelector('#form').style.display="none"
+                document.querySelector('#overlay').style.display = "none"
+                document.body.style.overflow='auto'
             } else {
                 console.log('Erreur :', res.status); // Afficher le code statut en cas d'erreur
                 addFlash('danger', 'Le lieu existe déjà !');
