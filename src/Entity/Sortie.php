@@ -36,10 +36,19 @@ class Sortie
 
     #[ORM\Column]
     #[Assert\NotNull(message: "Le nombre de place doit être renseigné")]
+    #[Assert\Range(
+        min: 2,
+        max: 100,
+        notInRangeMessage: "Le nombre de places doit être compris entre 2 et 100"
+    )]
     private int $nombrePlace;
 
     #[ORM\Column]
     #[Assert\NotNull(message: "La durée doit être renseignée")]
+    #[Assert\Range(
+        min: 1,
+        minMessage: "La durée ne peut être inférieur à une minute",
+    )]
     private int $duree;
 
     #[ORM\Column(length: 255)]

@@ -65,7 +65,7 @@ public function update(Request $request, UserPasswordHasherInterface $userPasswo
         // Persist and flush changes to the database
         $entityManager->persist($user);
         $entityManager->flush();
-        $this->addFlash('success', 'Les modifications du profil ont bien été mise à jour');
+        $this->addFlash('success', 'Les informations du profil ont bien été mise à jour');
         // Redirect after successful update
         return $this->redirectToRoute('app_update_profil');
     }
