@@ -18,7 +18,7 @@
         <label for="username">Pseudo</label>
         <input type="pseudo" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="pseudo" required autofocus>
         <label for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+        <input type="password" name="_password" id="password" class="0form-control" autocomplete="current-password" required>
          <label>
         <input type="checkbox" name="_remember_me" checked>
         Keep me logged in
@@ -27,6 +27,7 @@
         <input type="hidden" name="_csrf_token"
                value="{{ csrf_token('authenticate') }}"
         >
+        
 
         {#
             Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
@@ -42,4 +43,5 @@
             Sign in
         </button>
     </form>
+    <a class="btn btn-dark btn-sm m-1" href={{ url('app_generate_password_reset') }}> Reinitialiser le mot de passe</a>
 {% endblock %}
