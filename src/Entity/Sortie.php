@@ -25,12 +25,14 @@ class Sortie
     private string $nom;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotNull(message: "La date de la sortie doit être renseignée")]
     #[Assert\GreaterThan('today UTC', message: "La date de sortie doit être postérieure à la date d'aujourdhui")]
-    private DateTimeInterface $dateSortie;
+    private ?DateTimeInterface $dateSortie;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotNull(message: "La date de la fin d'inscription doit être renseignée")]
     #[Assert\LessThan(propertyPath: "dateSortie", message: "La limite de date d'inscription ne peut pas être postérieure à la date de sortie, voyez vous ?")]
-    private DateTimeInterface $dateFinInscription;
+    private ?DateTimeInterface $dateFinInscription;
 
     #[ORM\Column]
     #[Assert\NotNull(message: "Le nombre de place doit être renseigné")]
@@ -91,7 +93,7 @@ class Sortie
         return $this->dateSortie;
     }
 
-    public function setDateSortie(\DateTimeInterface $dateSortie): static
+    public function setDateSortie(?\DateTimeInterface $dateSortie): static
     {
         $this->dateSortie = $dateSortie;
 
@@ -103,7 +105,7 @@ class Sortie
         return $this->dateFinInscription;
     }
 
-    public function setDateFinInscription(DateTimeInterface $dateFinInscription): static
+    public function setDateFinInscription(?DateTimeInterface $dateFinInscription): static
     {
         $this->dateFinInscription = $dateFinInscription;
 
