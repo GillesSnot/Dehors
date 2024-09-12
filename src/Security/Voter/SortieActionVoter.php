@@ -85,7 +85,10 @@ final class SortieActionVoter extends Voter
                 break;
             case self::SE_DESINSCRIRE:
                 return 
-                    SortieConstants::ETAT_OUVERT === $subject->getEtat() 
+                    (
+                        SortieConstants::ETAT_OUVERT === $subject->getEtat()
+                        ||  SortieConstants::ETAT_FERME === $subject->getEtat()
+                    )
                     && $subject->getParticipants()->contains($user)
                 ;
                 break;

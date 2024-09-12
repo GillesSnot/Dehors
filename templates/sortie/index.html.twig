@@ -56,7 +56,10 @@
         formSearch.addEventListener('change', async event => {
             loadSorties()
         })
-        let textRecherche = document.getElementById("text_recherche")
+        formSearch.addEventListener('submit', async event => {
+            event.preventDefault()
+        })
+        let textRecherche = document.getElementById("sortie_filter_recherche")
         textRecherche.addEventListener('keyup', async event => {
             loadSorties()
         })

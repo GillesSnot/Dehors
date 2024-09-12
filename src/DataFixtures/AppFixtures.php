@@ -138,7 +138,7 @@ class AppFixtures extends Fixture
 
         $user1 = new User();
         $user1->setPassword('$2y$13$slruzjo7Bv.8QG4kkntzyOl08OgWmdH53jTx0RG1zxqJNuTu7ci.u'); // mdp : password
-        $user1->setEmail('test1@test.fr');
+        $user1->setEmail('gilles@test.fr');
         $user1->setNom('Kebab');
         $user1->setPrenom('Gilles');
         $user1->setTelephone('33450453289');
@@ -150,11 +150,11 @@ class AppFixtures extends Fixture
 
         $user2 = new User();
         $user2->setPassword('$2y$13$slruzjo7Bv.8QG4kkntzyOl08OgWmdH53jTx0RG1zxqJNuTu7ci.u'); // mdp : password
-        $user2->setEmail('test2@test.fr');
-        $user2->setNom('Kebab2');
-        $user2->setPrenom('Gilles2');
+        $user2->setEmail('Fredou@test.fr');
+        $user2->setNom('Tournesol');
+        $user2->setPrenom('Frederique');
         $user2->setTelephone('33450453289');
-        $user2->setPseudo('Pseudo2');
+        $user2->setPseudo('Fredou');
         $user2->setRoles(['ROLE_USER','ROLE_ADMIN']);
         $user2->setPhoto($photoProfilTest);
         $user2->setCampus($campusCDB);
@@ -162,11 +162,11 @@ class AppFixtures extends Fixture
 
         $user3 = new User();
         $user3->setPassword('$2y$13$slruzjo7Bv.8QG4kkntzyOl08OgWmdH53jTx0RG1zxqJNuTu7ci.u'); // mdp : password
-        $user3->setEmail('test3@test.fr');
-        $user3->setNom('Kebab2');
-        $user3->setPrenom('Gilles3');
+        $user3->setEmail('seb@test.fr');
+        $user3->setNom('Jean');
+        $user3->setPrenom('Sébastien');
         $user3->setTelephone('33450453289');
-        $user3->setPseudo('Pseudo3');
+        $user3->setPseudo('Seb');
         $user3->setRoles(['ROLE_USER']);
         $user3->setCampus($campusNantes);
         $user3->setPhoto($photoProfilTest);
@@ -221,7 +221,7 @@ class AppFixtures extends Fixture
         $manager->persist($sortiePiscine);
 
         $sortiePiscine2 = new Sortie();
-        $sortiePiscine2->setNom('sortie Piscine plein');
+        $sortiePiscine2->setNom('Sortie Piscine Gayeules');
         $sortiePiscine2->setCampus($campusCDB);
         $sortiePiscine2->setLieu($lieuPiscine);
         $sortiePiscine2->setDateSortie(new DateTime('+10 days'));
@@ -267,7 +267,7 @@ class AppFixtures extends Fixture
         $manager->persist($sortieParc2);
 
         $sortieCinema = new Sortie();
-        $sortieCinema->setNom('Sortie cinéma');
+        $sortieCinema->setNom('Ciné - Le Compte de MonteCristo');
         $sortieCinema->setCampus($campusNantes);
         $sortieCinema->setLieu($lieuCinema);
         $sortieCinema->setDateSortie(new DateTime('now'));
@@ -283,7 +283,7 @@ class AppFixtures extends Fixture
         $manager->persist($sortieCinema);
 
         $sortieCinema2 = new Sortie();
-        $sortieCinema2->setNom('Sortie cinéma');
+        $sortieCinema2->setNom('Ciné - Deadpool & Wolverine');
         $sortieCinema2->setCampus($campusNantes);
         $sortieCinema2->setLieu($lieuCinema);
         $sortieCinema2->setDateSortie(new DateTime('+2 days'));
@@ -299,7 +299,7 @@ class AppFixtures extends Fixture
         $manager->persist($sortieCinema2);
 
         $sortieCinema3 = new Sortie();
-        $sortieCinema3->setNom('Sortie cinéma');
+        $sortieCinema3->setNom('Ciné - Alien Romulus');
         $sortieCinema3->setCampus($campusNantes);
         $sortieCinema3->setLieu($lieuCinema);
         $sortieCinema3->setDateSortie(new DateTime('+2 days'));
@@ -316,7 +316,7 @@ class AppFixtures extends Fixture
         $manager->persist($sortieCinema3);
 
         $sortieCinema4 = new Sortie();
-        $sortieCinema4->setNom('Sortie cinéma');
+        $sortieCinema4->setNom('Ciné - Golo et Ritchie');
         $sortieCinema4->setCampus($campusNantes);
         $sortieCinema4->setLieu($lieuCinema);
         $sortieCinema4->setDateSortie(new DateTime('-5 days'));
@@ -333,7 +333,7 @@ class AppFixtures extends Fixture
         $manager->persist($sortieCinema4);
 
         $sortieParc3 = new Sortie();
-        $sortieParc3->setNom('sortie Parc annulée');
+        $sortieParc3->setNom('Sortie Parc du Poutyl');
         $sortieParc3->setCampus($campusNiort);
         $sortieParc3->setLieu($lieuParc);
         $sortieParc3->setDateSortie(new DateTime('+10 days'));
