@@ -65,7 +65,7 @@ class SortieType extends AbstractType
             if ($options['is_edit']) {
                 $builder
                     ->add('modifier', SubmitType::class, [
-                        'attr' => ['class' => 'btn btn-outline-info'],
+                        'attr' => ['class' => 'btn-dark'],
                         'label' => 'Modifier',
                     ]);
             }
