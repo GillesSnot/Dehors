@@ -9,22 +9,18 @@ use App\Repository\VilleRepository;
 use App\Repository\CampusRepository;
 use App\Repository\LieuRepository;
 use App\Repository\SortieRepository;
-use App\Constants\SortieConstants;
 use App\Form\AnnulationSortieFormType;
 use App\Form\AnnulationSortieType;
 use App\Form\SortieFilterType;
 use App\Model\SortieActionModel;
 use App\Model\SortieListItemModel;
 use App\Security\Voter\SortieActionVoter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class SortieController extends AbstractController
