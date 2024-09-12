@@ -22,8 +22,8 @@ class PasswordType extends AbstractType
             'second_options' => ['label' => 'Repeat Password'],
             'constraints' => [
                 new Assert\Regex([
-                    'pattern' => '/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
-                    'message' => 'Password must be at least 8 characters long and include both letters and numbers.',
+                    'pattern' => '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[1-9])(?=.*?[#?!@$ %^&*-]).{8,}$/',
+                    'message' => 'Le mot de passe doit faire 8 caractères et contenir au moins minuscule, une majuscule, un caractère spécial et un chiffre.',
                 ]),
             ],
         ]);

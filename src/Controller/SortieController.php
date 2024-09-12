@@ -205,6 +205,7 @@ class SortieController extends AbstractController
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $sortie->setOrganisateur($user);
+            $sortie->addParticipant($user);
 
             if ($sortieForm->get('enregistrer')->isClicked()) {
                 $sortie->setPubliee(false);

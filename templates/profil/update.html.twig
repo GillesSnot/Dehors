@@ -18,32 +18,16 @@
         <!-- Formulaire à droite -->
         <div>
             <h1 class="mb-4">Mon profil</h1>
-
+            {% form_theme userForm 'bootstrap_5_horizontal_layout.html.twig' %}
             {{ form_start(userForm) }}
-            <div class="mb-3">
                 {{ form_row(userForm.pseudo) }} 
-            </div>
-            <div class="mb-3">
                 {{ form_row(userForm.prenom) }}
-            </div>
-            <div class="mb-3">
                 {{ form_row(userForm.nom) }}
-            </div>
-            <div class="mb-3">
                 {{ form_row(userForm.telephone) }}
-            </div>
-            <div class="mb-3">
                 {{ form_row(userForm.email) }}
-            </div>
-            <div class="mb-3">
                 {{ form_row(userForm.password) }}
-            </div>
-            <div class="mb-3">
                 {{ form_row(userForm.campus) }}
-            </div>
-            <div class="mb-3">
                 {{ form_row(userForm.photo) }}
-            </div>
             {{ form_end(userForm) }}
         </div>
     </div>

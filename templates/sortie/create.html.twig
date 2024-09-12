@@ -112,7 +112,7 @@
 
 
          <div id="form"
-              style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);background-color:white;z-index:2;border:1px solid black;padding:20px;text-align:center;">
+              style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);background-color:white;z-index:2;border:1px solid black;padding:20px;text-align:center;z-index:10;">
              <form id="formAddLieu">
                  <h2> Ajouter un lieu </h2>
                  <label for="nom" class="col-1">Nom : </label>
@@ -134,6 +134,7 @@
      </div>
 
 
+     <div style="top:0px;left:0px;width:100%;height:100%;z-index:8;display:none;position:absolute;" id="overlay"></div>
      <script defer>
          getLieu()
          var select_lieu = document.querySelector('#sortie_ville').addEventListener('change', async function () {
@@ -142,10 +143,14 @@
          const buttonAddLieu = document.querySelector('#addLieu')
          buttonAddLieu.addEventListener('click', function () {
              document.querySelector('#form').style.display = "block"
+             document.querySelector('#overlay').style.display = "block"
+             document.body.style.overflow='hidden'
          })
          const annulerLieu = document.querySelector('#annulerLieu')
          annulerLieu.addEventListener('click', function () {
              document.querySelector('#form').style.display = "none"
+             document.querySelector('#overlay').style.display = "none"
+             document.body.style.overflow='auto'
          })
          const validerLieu = document.querySelector('#validerLieu')
          validerLieu.addEventListener('click', async function () {
@@ -156,114 +161,113 @@
              var i = document.querySelector('#villeForm select').selectedIndex;
              var ville = document.querySelectorAll('#villeForm select option')[i].textContent;
 
-             console.log(nom, rue, latitude, longitude, ville);
+            console.log(nom, rue, latitude, longitude, ville);
 
-             // Création de l'objet FormData pour encapsuler les données du formulaire
-             const formData = new FormData();
-             formData.append('nom', nom);
-             formData.append('rue', rue);
-             formData.append('latitude', latitude);
-             formData.append('longitude', longitude);
-             formData.append('ville', ville);
+            // Création de l'objet FormData pour encapsuler les données du formulaire
+            const formData = new FormData();
+            formData.append('nom', nom);
+            formData.append('rue', rue);
+            formData.append('latitude', latitude);
+            formData.append('longitude', longitude);
+            formData.append('ville', ville);
 
-             // Envoi de la requête POST avec les données du formulaire
-             const res = await fetch('/addLieu', {
-                 method: 'POST',
-                 body: formData,
-             });
+            // Envoi de la requête POST avec les données du formulaire
+            const res = await fetch('/addLieu', {
+            method: 'POST',
+            body: formData,
+            });
 
-             // Vérification du statut HTTP
-             if (res.status == 201) {
-                 getLieu()
-                 addFlash('success', 'Lieu crée avec succès ');
-                 document.querySelector('#form').style.display = "none"
-             } else {
-                 console.log('Erreur :', res.status); // Afficher le code statut en cas d'erreur
-                 addFlash('danger', 'Le lieu existe déjà !');
-             }
+            // Vérification du statut HTTP
+            if (res.status == 201) {
+                getLieu()
+                addFlash('success', 'Lieu crée avec succès ');
+                document.querySelector('#form').style.display="none"
+                document.querySelector('#overlay').style.display = "none"
+                document.body.style.overflow='auto'
+            } else {
+                console.log('Erreur :', res.status); // Afficher le code statut en cas d'erreur
+                addFlash('danger', 'Le lieu existe déjà !');
+            }
+            
+            // Optionnel : récupérer le message si la réponse est en JSON
+            const result = await res.json();
+            console.log(result.message);
+            function addFlash(type, message) {
+            // Crée une nouvelle div pour l'alerte
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} position-absolute start-50 my-5 translate-middle`;
+            alertDiv.textContent = message;
 
-             // Optionnel : récupérer le message si la réponse est en JSON
-             const result = await res.json();
-             console.log(result.message);
+            // Ajouter l'alerte dans le DOM
+            document.querySelector('#flash').appendChild(alertDiv);
 
-             function addFlash(type, message) {
-                 // Crée une nouvelle div pour l'alerte
-                 const alertDiv = document.createElement('div');
-                 alertDiv.className = `alert alert-${type} position-absolute start-50 my-5 translate-middle`;
-                 alertDiv.textContent = message;
+            // Supprimer l'alerte après 5 secondes
+            setTimeout(function () {
+                alertDiv.remove();
+            }, 5000);
+        }
+           
+            
+       })
 
-                 // Ajouter l'alerte dans le DOM
-                 document.querySelector('#flash').appendChild(alertDiv);
+        const lieuSelect = document.querySelector('#{{ sortieForm.lieu.vars.id }}');
+        const rueContainer = document.getElementById('rueContainer');
+        const latitudeContainer = document.getElementById('latitudeContainer');
+        const longitudeContainer = document.getElementById('longitudeContainer');
+        const codePostalContainer = document.getElementById('codePostalContainer');
+        getInfoLieu();
 
-                 // Supprimer l'alerte après 5 secondes
-                 setTimeout(function () {
-                     alertDiv.remove();
-                 }, 5000);
-             }
+        lieuSelect.addEventListener('change', getInfoLieu);
 
+        async function getInfoLieu() {
+            const lieuId = lieuSelect.value;
 
-         })
+            if (lieuId) {
+                try {
+                    const response = await fetch(`/get-lieu?lieuId=${lieuId}`);
+                    const data = await response.json();
 
-         const lieuSelect = document.querySelector('#{{ sortieForm.lieu.vars.id }}');
-         const rueContainer = document.getElementById('rueContainer');
-         const latitudeContainer = document.getElementById('latitudeContainer');
-         const longitudeContainer = document.getElementById('longitudeContainer');
-         const codePostalContainer = document.getElementById('codePostalContainer');
-         getInfoLieu();
-
-         lieuSelect.addEventListener('change', getInfoLieu);
-
-         async function getInfoLieu() {
-             const lieuId = lieuSelect.value;
-
-             if (lieuId) {
-                 try {
-                     const response = await fetch(`/get-lieu?lieuId=${lieuId}`);
-                     const data = await response.json();
-
-                     if (data.error) {
-                         rueContainer.innerHTML = `<p class="text-danger">${data.error}</p>`;
-                     } else {
-                         rueContainer.innerHTML = `<p>Rue : ${data.rue}</p>`;
-                         latitudeContainer.innerHTML = `<p>Latitude : ${data.latitude}</p>`;
-                         longitudeContainer.innerHTML = `<p>Longitude : ${data.longitude}</p>`;
-                         codePostalContainer.innerHTML = `<p>Code postal : ${data.codePostal}</p>`;
-                     }
-                 } catch (error) {
-                     console.error('Erreur lors de la récupération du code postal:', error);
-                     rueContainer.innerHTML = `<p class="text-danger">Erreur lors de la récupération du code postal.</p>`;
-                 }
-             } else {
-                 rueContainer.innerHTML = '';
-             }
-         }
+                    if (data.error) {
+                        rueContainer.innerHTML = `<p class="text-danger">${data.error}</p>`;
+                    } else {
+                        rueContainer.innerHTML = `<p>Rue : ${data.rue}</p>`;
+                        latitudeContainer.innerHTML = `<p>Latitude : ${data.latitude}</p>`;
+                        longitudeContainer.innerHTML = `<p>Longitude : ${data.longitude}</p>`;
+                        codePostalContainer.innerHTML = `<p>Code postal : ${data.codePostal}</p>`;
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la récupération du code postal:', error);
+                    rueContainer.innerHTML = `<p class="text-danger">Erreur lors de la récupération du code postal.</p>`;
+                }
+            } else {
+                rueContainer.innerHTML = '';
+            }
+        }
 
 
-         async function getLieu() {
-             var select_lieu = document.querySelector('#sortie_lieu')
-             select_lieu.disabled = true
-             var select = document.querySelector('#sortie_ville')
-             var selectedIndex = select.selectedIndex;
-             var id_ville = document.querySelectorAll('#sortie_ville option')[selectedIndex].value
-             const response = await fetch(`/getLieuFromVille/${id_ville}`);
-             const data = await response.json();
-             // console.log(data)
-             eraseOption(select_lieu)
-             addData(select_lieu, data)
-             select_lieu.disabled = false
-         }
-
-         function eraseOption(select) {
-             select.innerHTML = "";
-         }
-
-         function addData(select, data) {
-             data.forEach(item => {
-                 const option = document.createElement('option');
-                 option.value = item[0];       // L'indice 0 pour la valeur
-                 option.textContent = item[1]; // L'indice 1 pour le texte
-                 select.appendChild(option); // Ajoute l'option à une liste déroulante
-             });
-         }
-     </script>
- {% endblock %}
+        async function getLieu(){
+            var select_lieu =document.querySelector('#sortie_lieu') 
+            select_lieu.disabled=true
+            var select =document.querySelector('#sortie_ville') 
+            var selectedIndex = select.selectedIndex;
+            var id_ville = document.querySelectorAll('#sortie_ville option')[selectedIndex].value
+            const response = await fetch(`/getLieuFromVille/${id_ville}`);
+            const data = await response.json();
+            // console.log(data)
+            eraseOption(select_lieu)
+            addData(select_lieu,data)
+            select_lieu.disabled=false
+        }
+        function eraseOption(select){
+            select.innerHTML="";
+        }
+        function addData(select,data){
+            data.forEach(item => {
+            const option = document.createElement('option');
+            option.value = item[0];       // L'indice 0 pour la valeur
+            option.textContent = item[1]; // L'indice 1 pour le texte
+            select.appendChild(option); // Ajoute l'option à une liste déroulante
+            });
+        }
+    </script>
+{% endblock %}

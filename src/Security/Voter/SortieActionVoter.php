@@ -48,17 +48,13 @@ final class SortieActionVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::AFFICHER:
-                return (
-                    !$this->security->isGranted('ADMIN') 
-                    && $user !== $subject->getOrganisateur()
-                    ) || SortieConstants::ETAT_ANNULEE === $subject->getEtat()
-                ;
+                return true;
                 break;
             case self::MODIFIER:
                 return 
                     SortieConstants::ETAT_ANNULEE !== $subject->getEtat() 
                     && (
-                    $this->security->isGranted('ADMIN') 
+                    $this->security->isGranted('ROLE_ADMIN') 
                     || $user === $subject->getOrganisateur()
                     )
                 ;
@@ -67,7 +63,7 @@ final class SortieActionVoter extends Voter
                 return 
                     SortieConstants::ETAT_EN_CREATION === $subject->getEtat() 
                     && (
-                        $this->security->isGranted('ADMIN') 
+                        $this->security->isGranted('ROLE_ADMIN') 
                         || $user === $subject->getOrganisateur()
                     )
                 ;
@@ -76,7 +72,7 @@ final class SortieActionVoter extends Voter
                 return 
                     SortieConstants::ETAT_ANNULEE !== $subject->getEtat() 
                     && (
-                        $this->security->isGranted('ADMIN') 
+                        $this->security->isGranted('ROLE_ADMIN') 
                         || $user === $subject->getOrganisateur()
                     )
                 ;

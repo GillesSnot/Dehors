@@ -13,7 +13,7 @@
         {% endblock %}
     </head>
     <body>
-        <div class="vh-10 d-flex flex-column" id="flash" style=' height: 10vh;position:fixed;width:100%;top: 0px;'>
+        <div class="vh-10 d-flex flex-column" id="flash" style=' height: 10vh;position:fixed;width:100%;top: 0px;z-index:10;'>
             {% if app.request.get('_route') not in ['app_login', 'app_reset_password', 'app_generate_password_reset'] %}
                 {% include 'generic/Navbar.html.twig' %}
             {% endif %}

@@ -36,10 +36,19 @@ class Sortie
 
     #[ORM\Column]
     #[Assert\NotNull(message: "Le nombre de place doit être renseigné")]
+    #[Assert\Range(
+        min: 2,
+        max: 100,
+        notInRangeMessage: "Le nombre de places doit être compris entre 2 et 100"
+    )]
     private int $nombrePlace;
 
     #[ORM\Column]
     #[Assert\NotNull(message: "La durée doit être renseignée")]
+    #[Assert\Range(
+        min: 1,
+        minMessage: "La durée ne peut être inférieur à une minute",
+    )]
     private int $duree;
 
     #[ORM\Column(length: 255)]
@@ -231,7 +240,7 @@ class Sortie
     public function getEtat(): ?string
     {
         // archivée si date de plus d'un mois
-        if (new DateTime('now') > date_add($this->getDateSortie(), date_interval_create_from_date_string(" 1 month"))) {
+        if (new DateTime('now') > date_add(clone ($this->getDateSortie()), date_interval_create_from_date_string(" 1 month"))) {
             return SortieConstants::ETAT_ARCHIVEE;
         }
 
@@ -242,10 +251,8 @@ class Sortie
         if (false === $this->isPubliee()) {
             return SortieConstants::ETAT_EN_CREATION;
         }
-
         $dateNow = new DateTime('now');
-    
-        if ($this->getDateSortie() < $dateNow && date_add($this->getDateSortie(),date_interval_create_from_date_string($this->getDuree() . " minutes")) > $dateNow) {
+        if ($this->getDateSortie() < $dateNow && date_add(clone ($this->getDateSortie()),date_interval_create_from_date_string($this->getDuree() . " minutes")) > $dateNow) {
             return SortieConstants::ETAT_EN_COURS;
         } else if ($this->getDateSortie() < $dateNow) {
             return SortieConstants::ETAT_PASSE;
