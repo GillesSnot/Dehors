@@ -23,7 +23,8 @@ class SortieType extends AbstractType
 
         $builder
             ->add('nom', TextType::class, [
-                'label'=>'Nom de la sortie :'
+                'label'=>'Nom de la sortie :',
+                'label_attr' => ['class' => 'form-label']
             ])
             ->add('dateSortie', DateTimeType::class, [
                 'widget' => 'single_text',
@@ -66,7 +67,7 @@ class SortieType extends AbstractType
             if ($options['is_edit']) {
                 $builder
                     ->add('modifier', SubmitType::class, [
-                        'attr' => ['class' => 'btn btn-outline-info'],
+                        'attr' => ['class' => 'btn-dark'],
                         'label' => 'Modifier',
                     ]);
             }
@@ -75,11 +76,11 @@ class SortieType extends AbstractType
             if (!$options['is_edit']) {
                 $builder
                     ->add('enregistrer', SubmitType::class, [
-                        'attr' => ['class' => 'btn btn-outline-info'],
+                        'attr' => ['class' => 'btn btn-dark'],
                         'label' => 'Enregistrer',
                     ])
                     ->add('publier', SubmitType::class, [
-                    'attr' => ['class' => 'btn btn-outline-info'],
+                    'attr' => ['class' => 'btn btn-dark'],
                     'label' => 'Publier la sortie',
                 ]);
             }

@@ -1,110 +1,139 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Création d'une sortie{% endblock %}
-{% form_theme sortieForm 'bootstrap_5_horizontal_layout.html.twig' %}
+{% form_theme sortieForm 'bootstrap_5_layout.html.twig' %}
  {% block body %}
-    <div class="container w-50 mx-auto">
-
-        <h1 class="text-center">Créer une sortie</h1>
-            {{ form_start(sortieForm) }}
-
-            <div class="col-sm">
-                <div class="form-group row">
-                    {{ form_label(sortieForm.nom) }}
-                    {{ form_widget(sortieForm.nom) }}
-                    {{ form_errors(sortieForm.nom) }}
-                </div>
-                <div class="form-group row">
-                    {{ form_label(sortieForm.dateSortie) }}
-                    {{ form_widget(sortieForm.dateSortie) }}
-                    {{ form_errors(sortieForm.dateSortie) }}
-                </div>
-                <div class="form-group row">
-                    {{ form_label(sortieForm.dateFinInscription) }}
-                    {{ form_widget(sortieForm.dateFinInscription) }}
-                    {{ form_errors(sortieForm.dateFinInscription) }}
-
-                </div>
-                <div class="form-group row">
-                    {{ form_label(sortieForm.nombrePlace) }}
-                    {{ form_widget(sortieForm.nombrePlace) }}
-                    {{ form_errors(sortieForm.nombrePlace) }}
 
 
-                </div>
-                <div class="form-group row">
-                    {{ form_label(sortieForm.duree) }}
-                    {{ form_widget(sortieForm.duree) }}
-                    {{ form_errors(sortieForm.duree) }}
+     <h1 class="text-center mb-5">Créer une sortie</h1>
+     {{ form_start(sortieForm) }}
+     <div class="row ms-5">
 
-                </div>
-                <div class="form-group row">
-                    {{ form_label(sortieForm.description) }}
-                    {{ form_widget(sortieForm.description) }}
-                    {{ form_errors(sortieForm.description) }}
-                </div>
-                <div class="col-sm">
-                    <div class="form-group row">
-                        {{ form_label(sortieForm.campus) }}
-                        {{ form_widget(sortieForm.campus) }}
-                        {{ form_errors(sortieForm.campus) }}
-                    </div>
-                    <div id='villeForm' class="form-group row">
+         <div class="col-lg-6">
 
-                        {{ form_label(sortieForm.ville) }}
-                        {{ form_widget(sortieForm.ville) }}
-                        {{ form_errors(sortieForm.ville) }}
-                    </div>
-                    <div class="form-group row">
-                        {{ form_label(sortieForm.lieu) }}
-                        {{ form_widget(sortieForm.lieu) }}
-                        {{ form_errors(sortieForm.lieu) }}
-                        <input id="addLieu" class="btn btn-primary" name="addLieu" readonly value="Ajouter un lieu">
-                     </div>
-                    
-                    <div>
-                        <p id="rueContainer">Rue : </p>
-                    </div>
-                    <div>
-                        <p id="codePostalContainer">Code postal : </p>
-                    </div>
-                    <div>
-                        <p id="latitudeContainer">Latitude :</p>
-                    </div>
-                    <div>
-                        <p id="longitudeContainer">Longitude :</p>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-around">
-                    {{ form_widget(sortieForm.enregistrer) }}
-                    {{ form_widget(sortieForm.publier) }}
-                    <a class="btn btn-outline-info" href={{ url('app_sortie') }}>Retour</a>
-                </div>
+             <div class="row mb-3">
+                 <label class="col-md-4 col-form-label">{{ form_label(sortieForm.nom) }}</label>
+                 <div class="col-md-auto">
+                     {{ form_widget(sortieForm.nom) }}
+                     {{ form_errors(sortieForm.nom) }}
+                 </div>
+             </div>
+             <div class="row mb-3">
+                 <label class="col-md-4 col-form-label">{{ form_label(sortieForm.dateSortie) }}</label>
+                 <div class="col-md-auto">
+                     {{ form_widget(sortieForm.dateSortie) }}
+                     {{ form_errors(sortieForm.dateSortie) }}
+                 </div>
+             </div>
+             <div class="row mb-3">
+                 <label class="col-md-4 col-form-label">{{ form_label(sortieForm.dateFinInscription) }}</label>
+                 <div class="col-md-auto">
+                     {{ form_widget(sortieForm.dateFinInscription) }}
+                     {{ form_errors(sortieForm.dateFinInscription) }}
+                 </div>
+             </div>
+             <div class="row mb-3">
+                 <label class="col-md-4 col-form-label">{{ form_label(sortieForm.nombrePlace) }}</label>
+                 <div class="col-md-auto">
+                     {{ form_widget(sortieForm.nombrePlace) }}
+                     {{ form_errors(sortieForm.nombrePlace) }}
+                 </div>
+             </div>
+             <div class="row mb-3">
+                 <label class="col-md-4 col-form-label">{{ form_label(sortieForm.duree) }}</label>
+                 <div class="col-md-auto">
+                     {{ form_widget(sortieForm.duree) }}
+                     {{ form_errors(sortieForm.duree) }}
+                 </div>
+                 <p class="col-md-auto">minutes</p>
+             </div>
+             <div class="row mb-3">
+                 <label class="col-md-4 col-form-label">{{ form_label(sortieForm.description) }}</label>
+                 <div class="col-md-auto">
+                     {{ form_widget(sortieForm.description) }}
+                     {{ form_errors(sortieForm.description) }}
+                 </div>
+             </div>
+         </div>
 
-                {{ form_end(sortieForm) }}
+         <div class="col-lg-6">
+
+             <div class="row mb-3">
+                 <label class="col-md-4 col-form-label">{{ form_label(sortieForm.campus) }}</label>
+                 <div class="col-md-auto">
+                     {{ form_widget(sortieForm.campus) }}
+                     {{ form_errors(sortieForm.campus) }}
+                 </div>
+             </div>
+
+             <div class="row mb-3" id='villeForm'>
+                 <label class="col-md-4 col-form-label">{{ form_label(sortieForm.ville) }}</label>
+                 <div class="col-md-auto">
+                     {{ form_widget(sortieForm.ville) }}
+                     {{ form_errors(sortieForm.ville) }}
+                 </div>
+             </div>
+
+             <div class="row mb-3">
+                 <label class="col-md-4 col-form-label">{{ form_label(sortieForm.lieu) }}</label>
+                 <div class="col-md-auto">
+                     {{ form_widget(sortieForm.lieu) }}
+                     {{ form_errors(sortieForm.lieu) }}
+                 </div>
+                 <div class="col-md-2">
+                     <button id="addLieu" type="button" class=" btn btn-outline-dark" style="border-radius:25px;"
+                             name="addLieu" readonly value="+">+ Lieu
+                     </button>
+                 </div>
+             </div>
+
+             <div>
+                 <p id="rueContainer">Rue : </p>
+             </div>
+             <div>
+                 <p id="codePostalContainer">Code postal : </p>
+             </div>
+             <div>
+                 <p id="latitudeContainer">Latitude :</p>
+             </div>
+             <div>
+                 <p id="longitudeContainer">Longitude :</p>
+             </div>
 
          </div>
+
+         <div class="d-flex justify-content-around mt-3">
+             {{ form_widget(sortieForm.enregistrer) }}
+             {{ form_widget(sortieForm.publier) }}
+             <a class="btn btn-dark" href={{ url('app_sortie') }}>Retour</a>
+         </div>
+
+         {{ form_end(sortieForm) }}
+
+
          <div id="form"
               style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);background-color:white;z-index:2;border:1px solid black;padding:20px;text-align:center;z-index:10;">
              <form id="formAddLieu">
                  <h2> Ajouter un lieu </h2>
-                 <label for="nom">Nom:</label>
-                 <input type="text" id="nom" name="nom" required><br><br>
-                 <label for="rue">Rue:</label>
-                 <input type="text" id="rue" name="rue" required><br><br>
-                 <label for="latitude">Latitude:</label>
-                 <input type="number" id="latitude" name="latitude" step="any" required><br><br>
-                 <label for="longitude">Longitude:</label>
-                 <input type="number" id="longitude" name="longitude" step="any" required><br><br>
+                 <label for="nom" class="col-1">Nom : </label>
+                 <input type="text" id="nom" name="nom" required style="border:0.5px solid black;"><br><br>
+                 <label for="rue" class="col-1">Rue : </label>
+                 <input type="text" id="rue" name="rue" required style="border:0.5px solid black;"><br><br>
+                 <label for="latitude" class="col-1">Latitude : </label>
+                 <input type="number" id="latitude" name="latitude" step="any" style="border:0.5px solid black;" required><br><br>
+                 <label for="longitude" class="col-1">Longitude : </label>
+                 <input type="number" id="longitude" name="longitude" step="any" required style="border:0.5px solid black;"><br><br>
                  <label for="annulerLieu">
-                     <input id="annulerLieu" class="btn btn-primary" readonly value="Annuler">
+                     <input id="annulerLieu" class="btn btn-dark" readonly value="Annuler">
                  </label>
                  <label for="validerLieu">
-                     <input id="validerLieu" class="btn btn-primary" readonly value="Valider">
+                     <input id="validerLieu" class="btn btn-dark" readonly value="Valider">
                  </label>
              </form>
          </div>
      </div>
+
+
      <div style="top:0px;left:0px;width:100%;height:100%;z-index:8;display:none;position:absolute;" id="overlay"></div>
      <script defer>
          getLieu()
