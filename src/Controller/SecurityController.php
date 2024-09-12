@@ -93,7 +93,7 @@ class SecurityController extends AbstractController
         $user= $this->tokenRepository->findOneBy(['token'=>$token])->getUser();
         $userForm = $this->createForm(PasswordType::class, $user);
         $userForm->handleRequest($request);
-
+        // dd($user);
         if($userForm->isSubmitted() && $userForm->isValid()) {
             if(!empty($userForm->get('password')->getData())){
                 $password=$userForm->get('password')->getData();
@@ -104,12 +104,8 @@ class SecurityController extends AbstractController
             $entityManager->flush();
 
             $existingToken = $this->tokenRepository->findOneBy(['token'=>$token]);
-
-            // Si un token existe déjà, on le supprime
-            if ($existingToken) {
-                $this->entityManager->remove($existingToken);
-                $this->entityManager->flush();  // Nécessaire pour supprimer immédiatement l'ancien token
-            }
+            $this->entityManager->remove($existingToken);
+            $this->entityManager->flush();  // Nécessaire pour supprimer immédiatement l'ancien token
             
             return $this->redirectToRoute('app_sortie');
         }
